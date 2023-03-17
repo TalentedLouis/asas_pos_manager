@@ -1,0 +1,61 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+#side_menu {
+    overflow: auto;
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+}
+main {
+    overflow: auto;
+    position: absolute;
+    top: 3rem;
+    bottom: 0;
+    right: 0;
+    left: 200px;
+    z-index: 1;
+}
+/* SideMenu content - closed */
+.tab-content {
+    max-height: 0;
+    -webkit-transition: max-height 0.35s;
+    -o-transition: max-height 0.35s;
+    transition: max-height 0.35s;
+    @apply bg-gray-300;
+}
+/* SideMenu content:checked - resize to full height */
+.tab input:checked ~ .tab-content {
+    max-height: 200vh;
+    -webkit-transition: max-height 0.35s;
+    -o-transition: max-height 0.35s;
+    transition: max-height 0.35s;
+}
+/* SideMenu content - open */
+.tab input:checked + label {
+    /*@apply bg-gray-200 text-gray-600*/
+}
+/* SideMenu content icon */
+.up-icon {
+    display: inline;
+}
+.tab input:checked + label .up-icon {
+    display: none;
+}
+.down-icon {
+    display: none;
+}
+.tab input:checked + label .down-icon {
+    display: inline;
+}
+
+/* .custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: calc(1.6em + 0.75rem + 2px);
+    margin-bottom: 0;
+} */
