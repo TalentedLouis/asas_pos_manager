@@ -143,6 +143,7 @@ class UpdateTransactions extends Component
             if ($product !== null) {
                 $this->transaction_lines[$index]->product_id = $product->id;
                 $this->transaction_lines[$index]->product_name = $product->name;
+                $this->transaction_lines[$index]->product_code = $product->code;
                 $stock = $stockService->getThisStock($product->id);
 //                $stock = Stock::where('product_id', '=', $product->id)->where('shop_id', '=', Auth::user()->shop->id)->first();
                 //2023add s

@@ -11,6 +11,7 @@
                 @method('put')
                 <div id="slip" class="w-full mb-16">
                     <livewire:update-transactions :slipId="$slip->id" />
+                    @include('modal.product-modal', ['products' => $products])
                 </div>
                 <div class="w-full fixed bottom-0 left-40 lg:left-48 bg-gray-300">
                     <div class="">

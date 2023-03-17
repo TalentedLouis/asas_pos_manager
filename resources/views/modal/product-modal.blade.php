@@ -5,27 +5,24 @@
         <div class="inline-block m-auto bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all lg:w-11/12">
             <div class="bg-white px-4 pt-5 pb-4">
                 <div id="slip" class="w-full mb-16">
-                    <form id="form2" class="w-full mb-3" action="{{ route('product.name_search') }}" method="post">
-                        @csrf
-                        <div class="flex flex-wrap border-b-2 w-12/12 sm:w-12/12 lg:w-12/12">
-                            <div class="px-3 mb-6 w-2/12 sm:w-2/12 lg:w-2/12">
-                                <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="" />
-                                <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                        href="{{ route('product.create') }}">商品追加(F1)</a>
-                            </div>
-                            <div class="px-3 mb-6 w-9/12 sm:w-9/12 lg:w-9/12">
-                                <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
-                                    <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索" />
-                                    <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" autofocus />
-                                    <x-button id="F9" type="button" class="px-6 py-3 bg-blue-500" onclick="getProducts();">検索(F9)</x-button>
-                                    <x-button id="F12" type="button" class="px-6 py-3 bg-blue-500" onclick="keyNameClear();">クリア(F12)</x-button>
-                                </div>
-                            </div>
-                            <div class="px-3 mb-6 w-1/12 sm:w-1/12 lg:w-1/12">
-                                <x-button type="button" class="px-6 py-3" style="color: black;" onclick="closeModal();">X</x-button>
+                    <div class="flex flex-wrap border-b-2 w-12/12 sm:w-12/12 lg:w-12/12">
+                        <div class="px-3 mb-6 w-2/12 sm:w-2/12 lg:w-2/12">
+                            <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="" />
+                            <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+                                    href="{{ route('product.create') }}">商品追加(F1)</a>
+                        </div>
+                        <div class="px-3 mb-6 w-9/12 sm:w-9/12 lg:w-9/12">
+                            <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
+                                <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索" />
+                                <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" autofocus />
+                                <x-button id="F9" type="button" class="px-6 py-3 bg-blue-500" onclick="getProducts();">検索(F9)</x-button>
+                                <x-button id="F12" type="button" class="px-6 py-3 bg-blue-500" onclick="keyNameClear();">クリア(F12)</x-button>
                             </div>
                         </div>
-                    </form>
+                        <div class="px-3 mb-6 w-1/12 sm:w-1/12 lg:w-1/12">
+                            <x-button type="button" class="px-6 py-3" style="color: black;" onclick="closeModal();">X</x-button>
+                        </div>
+                    </div>
                         
                     <table class="table-auto w-full mb-2">
                         <thead>
@@ -59,28 +56,14 @@
         let purchase_key = localStorage.getItem('purchase_key')
         let page_type = localStorage.getItem('page_type')        
 
-        if(page_type == 'create'){
-            // let parent  = document.getElementById('slip-' + purchase_key);
-            // parent.children[0].children[0].value = item.code;
-            // parent.children[1].children[0].value = item.name;
+        console.log('product page type');
+        console.log(item.code);
 
-            // let quantity = parent.children[2];
-            // let unit_price = parent.children[3];
-            // let consumption_tax = parent.children[4];
-            // let amount_of_money = parent.children[5];
-            // let cost_price = parent.children[6];
-            
-            // parent.children[7].children[0].value = item.this_stock_quantity;
-            
+        if(page_type == 'create')       
             Livewire.emit('changeProduct', purchase_key, item.code);
-        }
-        if(page_type == 'edit'){
-            // let parent  = document.getElementById('transaction_line-' + purchase_key);
-            // parent.children[0].children[0].value = item.code;
-            // parent.children[1].children[0].value = item.name;
-
+        if(page_type == 'edit')
             Livewire.emit('changeProduct', 0, item.code);
-        }
+
         $('#interestModal').addClass('invisible');
     }
     function getProducts(){

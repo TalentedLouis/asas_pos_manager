@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');
     Route::post('/product/code_search', [ProductController::class, 'code_search'])->name('product.code_search');
     Route::post('/product/name_search', [ProductController::class, 'name_search'])->name('product.name_search');
+    Route::post('/product/name_search_result', [ProductController::class, 'name_search_result'])->name('product.name_search_result');
     Route::get('/product/code_create', [ProductController::class, 'code_create'])->name('product.code_create');
 
     Route::get('/purchase', [PurchaseController::class, 'index'])->name('purchase.index');

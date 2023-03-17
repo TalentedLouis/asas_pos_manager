@@ -94,10 +94,10 @@
         </div>
     </div>
     @foreach($lines as $key => $value)
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap slip-product" id="slip-{{$key}}">
             <div class="px-1 mb-2 w-2/12">
                 {{-- 商品コード --}}
-                <x-input class="w-full text-sm" type="text" 
+                <x-input class="w-full text-sm" type="text" id="line-{{$key}}"
                          wire:model.lazy="product_code.{{ $key }}"
                          wire:change.lazy="$emit('changeProduct', {{ $key }}, $event.target.value)"
                          name="lines[{{ $key }}][product_code]"></x-input>
@@ -184,7 +184,7 @@
             </div>
             <div class="px-1 mb-2 w-1/24">
                 {{-- 検索 --}}
-                <x-button class="bg-blue-500 mr-1" wire:click.prevent="del({{ $index }},{{ $key }})">検索</x-button>
+                <x-button class="bg-blue-500 mr-1" wire:click.prevent="" onclick="openModal('{{$key}}', 'create');">検索</x-button>
             </div>
             <div class="px-1 mb-2 w-1/24">
                 {{-- 削除 --}}
@@ -219,3 +219,11 @@
     </div>
     --}}
 </div>
+
+<script type="text/javascript">
+    function openModal(purchaseKey, pageType){
+        $('#interestModal').removeClass('invisible');
+        localStorage.setItem('purchase_key', purchaseKey);
+        localStorage.setItem('page_type', pageType);
+    }
+</script>

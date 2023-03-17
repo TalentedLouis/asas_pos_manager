@@ -176,7 +176,7 @@
             </div>
             <div class="px-1 mb-2 w-1/24">
                 {{-- 検索 --}}
-                <x-button class="bg-blue-500 mr-1" wire:click.prevent="">検索</x-button>
+                <x-button class="bg-blue-500 mr-1" wire:click.prevent="" onclick="openModal('{{$transaction_line->id}}', 'edit');">検索</x-button>
             </div>
             <div class="px-1 mb-2 w-1/12">
                 {{-- 削除 --}}
@@ -203,3 +203,11 @@
         {{ $test_message }}
     </div>
 </div>
+
+<script type="text/javascript">
+    function openModal(purchaseKey, pageType){
+        $('#interestModal').removeClass('invisible');
+        localStorage.setItem('purchase_key', purchaseKey);
+        localStorage.setItem('page_type', pageType);
+    }
+</script>

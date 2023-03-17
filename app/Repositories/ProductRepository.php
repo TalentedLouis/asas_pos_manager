@@ -39,7 +39,8 @@ class ProductRepository implements ProductRepositoryInterface
                      'sell_price','stocking_price')
               ->leftjoin('stocks','stocks.product_id','=','products.id')
               //->where('stocks.shop_id',Auth::user()->shop->id)
-              ->where('products.name', 'LIKE' ,'%'.$name.'%');
+              ->where('products.name', 'LIKE' ,'%'.$name.'%')
+              ->with(['category','genre']);
         return $query->orderBy("products.name")
               ->paginate(15);
     }
@@ -63,7 +64,8 @@ class ProductRepository implements ProductRepositoryInterface
                      'category_id','genre_id','maker_id','this_stock_quantity',
                      'sell_price','stocking_price')
               ->leftjoin('stocks','stocks.product_id','=','products.id')
-              ->where('stocks.shop_id',Auth::user()->shop->id);
+              ->where('stocks.shop_id',Auth::user()->shop->id)
+              ->with(['category','genre']);
         return $query->orderBy("products.id")
               ->paginate(15);
 

@@ -12,15 +12,8 @@ use App\Services\StockService;
 use App\Services\TaxService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
-
-//2023add
-/*
-protected $listeners = [
-    'changeProduct',
-];
-*/
-//2023add
 
 class Transactions extends Component
 {
@@ -51,6 +44,9 @@ class Transactions extends Component
     Public $total_include_tax;
     Public $total_exclude_tax;
     //2023upd
+    protected $listeners = [
+        'changeProduct',
+    ];
 
     public function mount()
     {
@@ -85,6 +81,17 @@ class Transactions extends Component
         unset($this->lines[$k]);
         $index = $index - 1;
         $this->index = $index;
+    }
+
+    public function changeProduct($index, $value)
+    {
+        $data = $this->product_code;
+        if(count($data) > $index){
+            $data[$index] = $value;
+        } else {
+            array_push($data, $value);
+        }
+        $this->product_code = $data;
     }
 
     public function render(ProductService $productService, StockService $stockService, TaxService $taxService)
