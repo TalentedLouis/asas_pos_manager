@@ -14,8 +14,8 @@
                         <div class="px-3 mb-6 w-9/12 sm:w-9/12 lg:w-9/12">
                             <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
                                 <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索" />
-                                <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" autofocus />
-                                <x-button id="F9" type="button" class="px-6 py-3 bg-blue-500" onclick="getProducts();">検索(F9)</x-button>
+                                <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" />
+                                <x-button type="button" class="px-6 py-3 bg-blue-500" onclick="getProducts();">検索</x-button>
                                 <x-button id="F12" type="button" class="px-6 py-3 bg-blue-500" onclick="keyNameClear();">クリア(F12)</x-button>
                             </div>
                         </div>
@@ -52,20 +52,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    function handleProductClick(item){
-        let purchase_key = localStorage.getItem('purchase_key')
-        let page_type = localStorage.getItem('page_type')        
-
-        console.log('product page type');
-        console.log(item.code);
-
-        if(page_type == 'create')       
-            Livewire.emit('changeProduct', purchase_key, item.code);
-        if(page_type == 'edit')
-            Livewire.emit('changeProduct', 0, item.code);
-
-        $('#interestModal').addClass('invisible');
-    }
     function getProducts(){
         let keyword  = document.getElementById('keyword').value;
         $.ajax({
@@ -91,11 +77,25 @@
             }
         });
     }
+    function handleProductClick(item){
+        let purchase_key = localStorage.getItem('purchase_key')
+        let page_type = localStorage.getItem('page_type')        
+
+        if(page_type == 'create')       
+            Livewire.emit('changeProduct', purchase_key, item.code);
+        if(page_type == 'edit')
+            Livewire.emit('changeProduct', purchase_key, item.code);
+
+        $('#interestModal').addClass('invisible');
+        keyNameClear();
+    }
+
     function keyNameClear(){
         document.getElementById('keyword').value = '';
         getProducts();
     }
     function closeModal(){
         $('#interestModal').addClass('invisible');
+        getProducts();
     }
 </script>

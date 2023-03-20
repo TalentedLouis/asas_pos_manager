@@ -225,5 +225,8 @@
         $('#interestModal').removeClass('invisible');
         localStorage.setItem('purchase_key', purchaseKey);
         localStorage.setItem('page_type', pageType);
+        setTimeout(function(){
+            document.getElementById('keyword').focus();
+        },700);
     }
 </script>
