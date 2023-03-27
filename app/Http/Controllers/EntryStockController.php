@@ -10,6 +10,8 @@ use App\Models\TransactionSlip;
 use App\Models\TransactionLine;
 //2023
 use App\UseCases\TransactionActions;
+//2023-03-09
+use App\UseCases\ProductActions;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,10 +25,12 @@ use Illuminate\Support\Facades\Validator;
 class EntryStockController extends Controller
 {
     private TransactionActions $action;
+    private ProductActions $productAction;
 
-    public function __construct(TransactionActions $action)
+    public function __construct(TransactionActions $action, ProductActions $productAction)
     {
         $this->action = $action;
+        $this->productAction = $productAction;
     }
 
     /**
@@ -65,15 +69,13 @@ class EntryStockController extends Controller
     {
         $slip = new TransactionSlip();
         $slip->transaction_type_id = TransactionType::ENTRY_STOCK;
-        //2023
         $line = new TransactionLine();
-        //2023
+        $products = $this->productAction->getAll();
         return view('entry_stock.create', [
             'transaction_type_id' => TransactionType::ENTRY_STOCK,
             'slip' => $slip,
-            //2023
             'line' => $line,
-            //2023
+            'products' => $products //2023-3-9
         ]);
     }
 
@@ -107,8 +109,10 @@ class EntryStockController extends Controller
      */
     public function edit(TransactionSlip $slip)
     {
+        $products = $this->productAction->getAll();
         return view('entry_stock.edit', [
             'slip' => $slip,
+            'products' => $products
         ]);
     }
 

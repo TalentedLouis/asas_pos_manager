@@ -34,7 +34,7 @@
                             <div class="px-4 mt-2 mb-2 w-1/16 flex items-center">
                             </div>    
                             <div class="px-2 mt-2 mb-2 w-1/13 flex items-center">
-                                <x-button  type="button" class="px-4 py-0 bg-gray-600 text-sm">　　　　　　<br>(F5)</x-button>
+                                <x-button  type="button" class="px-4 py-0 bg-blue-500 text-sm">　10行追加　<br>(F5)</x-button>
                             </div>
                             <div class="px-1 mt-2 mb-2 w-1/13 flex items-center">
                                 <x-button  type="button" class="px-4 py-0 bg-gray-600 text-sm">　　　　　　<br>(F6)</x-button>

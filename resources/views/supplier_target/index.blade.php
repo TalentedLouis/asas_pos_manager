@@ -1,4 +1,5 @@
 <x-base-layout>
+    <x-slot name="title">仕入先一覧</x-slot>
     <x-slot name="slot">
         <div class="w-full mb-3">
             <div class="flex flex-wrap">
@@ -9,17 +10,17 @@
         <table class="table-auto w-full mb-2">
             <thead>
             <tr class="border">
-                <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/4 sm:w-1/5 lg:w-1/6 text-right">仕入先コード</th>
-                <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/4 sm:w-1/5 lg:w-1/6 text-left">仕入先名</th>
-                <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/4 sm:w-1/5 lg:w-1/6 text-left">操作</th>
+                <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">仕入先コード</th>
+                <th class="py-2 px-1 sm:px-2 lg:px-4 w-2/12 sm:w-2/12 lg:w-2/12 text-left">仕入先名</th>
+                <th class="py-2 px-1 sm:px-2 lg:px-4 w-9/12 sm:w-9/12 lg:w-9/12 text-left">操作</th>
             </tr>
             </thead>
             <tbody>
             @foreach($supplierTargets as $supplierTarget)
                 <tr class="border bg-white odd:bg-gray-100">
-                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/4 sm:w-1/5 lg:w-1/6 text-right">{{ $supplierTarget->code }}</td>
-                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-2/4 sm:w-1/5 lg:w-1/6 text-left">{{ $supplierTarget->name }}</td>
-                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/4 sm:w-1/5 lg:w-1/6 text-left">
+                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $supplierTarget->code }}</td>
+                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-2/12 sm:w-2/12 lg:w-2/12 text-left">{{ $supplierTarget->name }}</td>
+                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-9/12 sm:w-9/12 lg:w-9/12 text-left">
                         <a class="mr-0.5 sm:mr-1 lg:mr-2" href="{{ route('supplier_target.edit', ['supplier_target'=>$supplierTarget->id]) }}">
                             <x-far-edit class="inline-block w-6 h-6 text-blue-600"/></a>
                         <form action="{{ route('supplier_target.destroy', ['supplier_target'=>$supplierTarget->id]) }}"

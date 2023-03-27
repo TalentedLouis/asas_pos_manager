@@ -14,6 +14,12 @@ interface SupplierTargetRepositoryInterface
     public function get(int $id): ?SupplierTarget;
 
     /**
+     * @param string $code
+     * @return SupplierTarget|null
+     */
+    public function findByCode(string $code): ?SupplierTarget;
+
+    /**
      * @return LengthAwarePaginator
      */
     public function all(): LengthAwarePaginator;

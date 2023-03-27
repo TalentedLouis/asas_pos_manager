@@ -1,4 +1,5 @@
 <x-base-layout>
+    <x-slot name="title">レシート登録</x-slot>
     <x-slot name="slot">
         <div class="w-full">
             <x-auth-validation-errors class="mb-4" :errors="$errors" />

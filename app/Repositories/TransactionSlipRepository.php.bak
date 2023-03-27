@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\TransactionSlip;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
+
+class TransactionSlipRepository implements TransactionSlipRepositoryInterface
+{
+    public function get(int $id): ?TransactionSlip
+    {
+        return TransactionSlip::find($id);
+    }
+
+    public function findByDate($fromDate, $toDate, $transaction_type_id): LengthAwarePaginator
+    {
+        return TransactionSlip::where("shop_id", Auth::user()->shop->id)
+            ->where('transacted_on', '>=', $fromDate)
+            ->where('transacted_on', '<=', $toDate)
+            ->where('transaction_type_id', '=', $transaction_type_id)
+            ->orderBy("id")
+            ->paginate(15);
+    }
+
+    public function newEntity(): TransactionSlip
+    {
+        return new TransactionSlip();
+    }
+
+    public function save(TransactionSlip $entity): bool
+    {
+        return $entity->save();
+    }
+
+    public function delete(TransactionSlip $entity): ?bool
+    {
+        return $entity->delete();
+    }
+}

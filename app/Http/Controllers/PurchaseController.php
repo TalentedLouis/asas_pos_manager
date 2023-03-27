@@ -6,10 +6,12 @@ use App\Enums\TransactionType;
 use App\Http\Requests\PurchaseRequest;
 use App\Http\Requests\PurchaseSearchRequest;
 use App\Models\TransactionSlip;
+//2023
 use App\Models\TransactionLine;
+//2023
 use App\UseCases\TransactionActions;
+//2023-03-09
 use App\UseCases\ProductActions;
-
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -67,14 +69,16 @@ class PurchaseController extends Controller
     {
         $slip = new TransactionSlip();
         $slip->transaction_type_id = TransactionType::PURCHASE;
+        //2023
         $line = new TransactionLine();
+        //2023
         $products = $this->productAction->getAll();
-
+        // return $products;
         return view('purchase.create', [
             'transaction_type_id' => TransactionType::PURCHASE,
-            'slip' => $slip,
-            'line' => $line,
-            'products' => $products
+            'slip' => $slip, //2023
+            'line' => $line, //2023
+            'products' => $products //2023-3-9
         ]);
     }
 
@@ -108,7 +112,6 @@ class PurchaseController extends Controller
     public function edit(TransactionSlip $slip)
     {
         $products = $this->productAction->getAll();
-
         return view('purchase.edit', [
             'slip' => $slip,
             'products' => $products

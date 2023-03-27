@@ -1,4 +1,5 @@
 <x-base-layout>
+    <x-slot name="title">商品登録</x-slot>
     <x-slot name="slot">
         <div class="w-full">
             <form id="form2"
@@ -71,11 +72,11 @@
                         <x-label for="stocking_taxable_method_type_id" value="仕入価格 適用税率" />
                         <x-select id="stocking_taxable_method_type_id" name="stocking_taxable_method_type_id" class="w-full" :items=$taxableMethodTypes :selected="old('stocking_taxable_method_type_id')" />
                     </div>
-                </div>
-                <div class="flex items-center justify-center">
-                    <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                       href="{{ route('product.index') }}">戻る(F1)</a>
-                    <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">追加する(F9)</x-button>
+                    <div class="flex items-center justify-center">
+                        <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+                        href="{{ route('product.index') }}">戻る(F1)</a>
+                        <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">追加する(F9)</x-button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -181,6 +181,18 @@ class ProductController extends Controller
         }
     }
 
+    public function name_search_result(Request $request)
+    {
+        $products = [];
+        if($request->keyword != '' || $request->keyword != null){
+            $products = $this->action->findByName($request->keyword);
+        }
+        else {
+            $products = $this->action->getAll();
+        }
+        return $products;
+    }
+
     public function name_search(Request $request): View
     {
         //$product = $this->action->findByCode($jan_code);
@@ -194,19 +206,6 @@ class ProductController extends Controller
             'productSearchType' => $productSearchType,
         ]);
     }
-
-    public function name_search_result(Request $request)
-    {
-        $products = [];
-        if($request->keyword != '' || $request->keyword != null){
-            $products = $this->action->findByName($request->keyword);
-        }
-        else {
-            $products = $this->action->getAll();
-        }
-        return $products;
-    }
-
     public function code_create(): RedirectResponse
     {
         // Create new code

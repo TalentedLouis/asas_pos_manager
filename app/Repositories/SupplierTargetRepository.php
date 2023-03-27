@@ -19,6 +19,18 @@ class SupplierTargetRepository implements SupplierTargetRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function findByCode(string $code): ?SupplierTarget
+    {
+        $result = SupplierTarget::where('code', $code)->get();
+        if (count($result) == 0) {
+            return null;
+        }
+        return $result[0];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function all(): LengthAwarePaginator
     {
         return DB::table('supplier_targets')->whereNull('deleted_at')->orderBy('id')->paginate(15);

@@ -37,6 +37,23 @@ class CustomerActions
     }
 
     /**
+     * @return LengthAwarePaginator
+     */
+    public function findByName(string $name): LengthAwarePaginator
+    {
+        return $this->repository->findByName($name);
+    }
+
+    /**
+     * @param string $code
+     * @return Customer|null
+     */
+    public function findByCode(string $code): ?Customer
+    {
+        return $this->repository->findByCode($code);
+    }
+
+    /**
      * @param CustomerRequest $post
      */
     public function create(CustomerRequest $post)
@@ -54,6 +71,16 @@ class CustomerActions
     {
         $entity->code = $post->code;
         $entity->name = $post->name;
+        $entity->read = $post->read;
+        $entity->sex = $post->sex;
+        $entity->birthday = $post->birthday;
+        $entity->zip_code = $post->zip_code;
+        $entity->address_1 = $post->address_1;
+        $entity->address_2 = $post->address_2;
+        $entity->address_3 = $post->address_3;
+        $entity->tel = $post->tel;
+        $entity->portable = $post->portable;
+        $entity->note = $post->note;
         return $this->repository->save($entity);
     }
 

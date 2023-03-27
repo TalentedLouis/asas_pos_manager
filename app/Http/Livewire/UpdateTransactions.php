@@ -12,6 +12,10 @@ use App\Models\TransactionSlip;
 //2023 add
 use App\Models\TransactionLine;
 //2023 add
+use App\Services\CustomerService;
+use App\Services\SupplierTargetService;
+use App\Services\EntryExitTargetService;
+
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Services\StockService;
@@ -51,6 +55,7 @@ class UpdateTransactions extends Component
         'transaction_slip.customer_id' => 'required',
         'transaction_slip.supplier_target_id' => 'required',
         'transaction_slip.entry_exit_target_id' => 'required',
+        'transaction_slip.target_code' => 'required',
         'transaction_slip.target_name' => 'required',
         'transaction_lines.*.product_id' => '',
         'transaction_lines.*.product_code' => '',
@@ -94,15 +99,20 @@ class UpdateTransactions extends Component
     public function changeTarget($value)
     {
         $this->target_message = '';
+        $customerService = App::make(CustomerService::class);
+        $supplierTargetService = App::make(SupplierTargetService::class);
+        $entryExitTargetService = App::make(EntryExitTargetService::class);
         if ($value !== '') {
             if ($this->transaction_slip->transaction_type_id === TransactionType::SALES) {
-                $target = Customer::find($value);
+                //$target = Customer::find($value);
+                $target = $customerService->getByCode($value);
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::PURCHASE) {
-                $target = SupplierTarget::find($value);
+                //$target = SupplierTarget::find($value);
+                $target = $supplierTargetService->getByCode($value);
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::EXIT_STOCK) {
-                $target = EntryExitTarget::find($value);
+                $target = $entryExitTargetService->getByCode($value);
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::ENTRY_STOCK) {
-                $target = EntryExitTarget::find($value);
+                $target = $entryExitTargetService->getByCode($value);
             } else {
                 $target = EntryExitTarget::find($value);
             }
@@ -111,6 +121,7 @@ class UpdateTransactions extends Component
                 $this->transaction_slip->supplier_target_id = null;
                 $this->transaction_slip->entry_exit_target_id = null;
                 $this->transaction_slip->target_name = null;
+                //$this->transaction_slip->target_code = null;
                 $this->target_message = '相手先がみつかりません。';
                 return null;
             }
@@ -125,6 +136,8 @@ class UpdateTransactions extends Component
             } else {
                 $this->transaction_slip->entry_exit_target_id = $target->id;
             }
+            
+            $this->transaction_slip->target_code = $target->code;
             $this->transaction_slip->target_name = $target->name;
         }
     }
@@ -293,13 +306,16 @@ class UpdateTransactions extends Component
         $this->transaction_slip = TransactionSlip::findOrFail($this->slipId);
         $this->transaction_lines = $this->transaction_slip->transaction_lines;
         $this->changeStaff($this->transaction_slip->staff_id);
+        $this->changeTarget($this->transaction_slip->target_code);
+        /*
         if ($this->transaction_slip->transaction_type_id === TransactionType::SALES) {
-            $this->changeTarget($this->transaction_slip->customer_id);
+            $this->changeTarget($this->transaction_slip->target_code);
         } elseif ($this->transaction_slip->transaction_type_id === TransactionType::PURCHASE) {
-            $this->changeTarget($this->transaction_slip->supplier_target_id);
+            $this->changeTarget($this->transaction_slip->target_code);
         } else {
             $this->changeTarget($this->transaction_slip->entry_exit_target_id);
         }
+        */
         //add(50,3);
     }
 

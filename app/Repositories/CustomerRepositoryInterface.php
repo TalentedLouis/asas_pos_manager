@@ -25,6 +25,13 @@ interface CustomerRepositoryInterface
     public function newEntity(): Customer;
 
     /**
+     * @param string $name
+     * @return Customer|null
+     */
+    public function findByName(string $name): LengthAwarePaginator;
+
+
+    /**
      * @param Customer $entity
      * @return bool
      */
@@ -40,4 +47,10 @@ interface CustomerRepositoryInterface
      * @return Collection
      */
     public function getSelect(): Collection;
+
+    /**
+     * @param string $code
+     * @return Customer|null
+     */
+    public function findByCode(string $code): ?Customer;
 }

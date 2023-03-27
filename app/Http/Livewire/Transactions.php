@@ -10,10 +10,21 @@ use App\Models\TransactionSlip;
 use App\Services\ProductService;
 use App\Services\StockService;
 use App\Services\TaxService;
+use App\Services\CustomerService;
+use App\Services\SupplierTargetService;
+use App\Services\EntryExitTargetService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
+
+//2023add
+/*
+protected $listeners = [
+    'changeProduct',
+];
+*/
+//2023add
 
 class Transactions extends Component
 {
@@ -44,8 +55,11 @@ class Transactions extends Component
     Public $total_include_tax;
     Public $total_exclude_tax;
     //2023upd
+    public $transaction_lines;
+
     protected $listeners = [
         'changeProduct',
+		'changeTarget',
     ];
 
     public function mount()
@@ -60,6 +74,8 @@ class Transactions extends Component
         'slip.supplier_target_id' => 'integer',
         'slip.customer_id' => 'integer',
         'slip.entry_exit_target_id' => 'integer',
+        'slip.target_code' => '',
+        'slip.target_name' => '',
         'test_id' => '',
     ];
 
@@ -83,6 +99,46 @@ class Transactions extends Component
         $this->index = $index;
     }
 
+	public function changeTarget($value)
+    {
+        $customerService = App::make(CustomerService::class);
+        $supplierTargetService = App::make(SupplierTargetService::class);
+        $entryExitTargetService = App::make(EntryExitTargetService::class);
+        if ($value !== '') {
+            if ($this->transaction_type_id === TransactionType::SALES) {
+                $target = $customerService->getByCode($value);
+            } elseif ($this->transaction_type_id === TransactionType::PURCHASE) {
+                $target = $supplierTargetService->getByCode($value);
+            } elseif ($this->transaction_type_id === TransactionType::EXIT_STOCK) {
+                $target = $entryExitTargetService->getByCode($value);
+            } elseif ($this->transaction_type_id === TransactionType::ENTRY_STOCK) {
+                $target = $entryExitTargetService->getByCode($value);
+            } else {
+                //$target = EntryExitTarget::find($value);
+            }
+            if (is_null($target)) {
+                $this->slip->customer_id = null;
+                $this->slip->supplier_target_id = null;
+                $this->slip->entry_exit_target_id = null;
+                $this->slip->target_name = null;
+                $this->test_message = '相手先がみつかりません。';
+                return null;
+            }
+            if ($this->transaction_type_id == TransactionType::SALES) {
+                $this->slip->customer_id = $target->id;
+            } elseif ($this->transaction_type_id == TransactionType::PURCHASE) {
+                $this->slip->supplier_target_id = $target->id;
+            } elseif ($this->transaction_type_id == TransactionType::EXIT_STOCK) {
+                $this->slip->entry_exit_target_id = $target->id;
+            } elseif ($this->transaction_type_id == TransactionType::ENTRY_STOCK) {
+                $this->slip->entry_exit_target_id = $target->id;
+            } else {
+                //$this->transaction_slip->entry_exit_target_id = $target->id;
+            }
+            $this->slip->target_code = $target->code;
+            $this->slip->target_name = $target->name;
+        }
+    }
     public function changeProduct($index, $value)
     {
         $data = $this->product_code;
@@ -136,6 +192,16 @@ class Transactions extends Component
 
                                 if ($this->quantity[$key] > 0){
                                     //$this->test_message = 'test2';
+                                    $this->quantity[$key] = 1;
+                                    if ($this->transaction_type_id == TransactionType::SALES) {
+                                        $this->unit_price[$key] = (integer)$stock->sell_price;
+                                        $this->tax_rate_type_id[$key] = $stock->sell_tax_rate_type_id;
+                                        $this->taxable_method_type_id[$key] = $stock->sell_taxable_method_type_id;
+                                    } else {
+                                        $this->unit_price[$key] = (integer)$stock->stocking_price;
+                                        $this->tax_rate_type_id[$key] = $stock->stocking_tax_rate_type_id;
+                                        $this->taxable_method_type_id[$key] = $stock->stocking_taxable_method_type_id;
+                                    }
                                 } else {
                                     //$this->test_message = 'test3';
                                     $this->quantity[$key] = 1;

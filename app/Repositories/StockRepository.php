@@ -75,7 +75,7 @@ class StockRepository implements StockRepositoryInterface
                         $stock->avg_stocking_price =
                             ((int)$line->quantity * (int)$line->final_unit_price_tax_excluded +
                                 (int)$stock->this_stock_quantity * (float)$stock->avg_stocking_price) /
-                            ((int)$line->quantity + (int)$stock->this_stock_quantity);
+                            (int)$stock->this_stock_quantity;
                     }
                 } else {
                     // 在庫数

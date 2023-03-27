@@ -15,34 +15,44 @@
         <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">
             @switch($transaction_slip->transaction_type_id)
                 @case(1)
-                    <x-label for="customer_id" class="w-full" value="会員No."></x-label>
-                    <x-input id="customer_id" class="text-sm w-1/3 mr-2" type="text" name="customer_id"
-                            wire:model.lazy="transaction_slip.customer_id"
+                    <x-label for="customer_code" class="w-full" value="会員No."></x-label>
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                            wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
+                    <x-input id="customer_id" class="text-sm w-1/3 mr-2" type="hidden" name="customer_id"
+                            wire:model.lazy="transaction_slip.customer_id" required></x-input>
                     <x-input wire:model.lazy="transaction_slip.target_name" class="text-sm w-1/2 mr-2  bg-gray-100" type="text" disabled></x-input>
                     @break
                 @case(2)
                     <x-label for="supplier_target_id" class="w-full" value="仕入先No."></x-label>
-                    <x-input id="supplier_target_id" class="text-sm w-1/3 mr-2" type="text" name="supplier_target_id"
-                            wire:model.lazy="transaction_slip.supplier_target_id"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                            wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
+                    <x-input id="supplier_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="supplier_target_id"
+                            wire:model.lazy="transaction_slip.supplier_target_id" required></x-input>
                     <x-input wire:model.lazy="transaction_slip.target_name" class="text-sm w-1/2 mr-2  bg-gray-100" type="text" disabled></x-input>
                     @break
                 @case(3)
                     <x-label for="entry_exit_target_id" class="w-full" value="出庫先No."></x-label>
-                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="text" name="entry_exit_target_id"
-                            wire:model.lazy="transaction_slip.entry_exit_target_id"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                            wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="entry_exit_target_id"
+                            wire:model.lazy="transaction_slip.entry_exit_target_id"
                             required></x-input>
                     <x-input wire:model.lazy="transaction_slip.target_name" class="text-sm w-1/2 mr-2  bg-gray-100" type="text" disabled></x-input>
                     @break
                 @case(4)
                     <x-label for="entry_exit_target_id" class="w-full" value="出庫先No."></x-label>
-                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="text" name="entry_exit_target_id"
-                            wire:model.lazy="transaction_slip.entry_exit_target_id"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                            wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="entry_exit_target_id"
+                            wire:model.lazy="transaction_slip.entry_exit_target_id"
                             required></x-input>
                     <x-input wire:model.lazy="transaction_slip.target_name" class="text-sm w-1/2 mr-2  bg-gray-100" type="text" disabled></x-input>
                     @break

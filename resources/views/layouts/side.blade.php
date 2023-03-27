@@ -14,10 +14,10 @@
                     売上処理</a>
                 <a class="block p-3" href="{{ route('purchase.create') }}">
                     仕入処理</a>
-                <a class="block p-3" href="{{ route('exit_stock.create') }}">
-                    出庫処理</a>
                 <a class="block p-3" href="{{ route('entry_stock.create') }}">
                     入庫処理</a>
+                <a class="block p-3" href="{{ route('exit_stock.create') }}">
+                    出庫処理</a>
                 <a class="block p-3" href="">
                     出金処理</a>
                 <a class="block p-3" href="">
@@ -37,7 +37,7 @@
                 <a class="block p-3" href="{{ route('product.index') }}">
                     商品</a>
                 <a class="block p-3" href="{{ route('customer.index') }}">
-                    会員</a>
+                    顧客</a>
                 <a class="block p-3" href="{{ route('category.index') }}">
                     カテゴリー</a>
                 <a class="block p-3" href="{{ route('genre.index') }}">

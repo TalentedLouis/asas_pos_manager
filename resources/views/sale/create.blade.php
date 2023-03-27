@@ -10,6 +10,7 @@
                 @csrf
                 <div id="slip" class="w-full mb-16">
                     <livewire:transactions :transaction_type_id="$transaction_type_id" :slip="$slip" />
+                    @include('modal.product-modal', ['products' => $products])
                 </div>
                 <div class="w-full fixed bottom-0 left-40 lg:left-48 bg-gray-800">
                     <div class="">

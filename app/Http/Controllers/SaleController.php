@@ -9,6 +9,8 @@ use App\Models\TransactionSlip;
 //2023
 use App\Models\TransactionLine;
 //2023
+//2023-03-09
+use App\UseCases\ProductActions;
 use App\UseCases\TransactionActions;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\View;
@@ -23,10 +25,12 @@ use Illuminate\Support\Facades\Validator;
 class SaleController extends Controller
 {
     private TransactionActions $action;
+    private ProductActions $productAction;
 
-    public function __construct(TransactionActions $action)
+    public function __construct(TransactionActions $action, ProductActions $productAction)
     {
         $this->action = $action;
+        $this->productAction = $productAction;
     }
 
     /**
@@ -67,6 +71,7 @@ class SaleController extends Controller
         $slip->transaction_type_id = TransactionType::SALES;
         //2023
         $line = new TransactionLine();
+        $products = $this->productAction->getAll();
         //2023
         return view('sale.create', [
             'transaction_type_id' => TransactionType::SALES,
@@ -74,6 +79,7 @@ class SaleController extends Controller
             //2023
             'line' => $line,
             //2023
+            'products' => $products //2023-3-9
         ]);
     }
 
@@ -107,8 +113,10 @@ class SaleController extends Controller
      */
     public function edit(TransactionSlip $slip)
     {
+        $products = $this->productAction->getAll();
         return view('sale.edit', [
             'slip' => $slip,
+            'products' => $products //2023-3-9
         ]);
     }
 

@@ -179,7 +179,7 @@
             <!-- Page Content -->
             <main class="max-w-full mx-auto p-2 sm:p-3 lg:p-4 left-40 lg:left-48">
                 @if($title ?? null)
-                    <h2 class="mb-1">{{ $title }}</h2>
+                    <h2 class="text-2xl font-bold px-2 mb-1">{{ $title }}</h2>
                 @endif
                 {{ $slot }}
             </main>

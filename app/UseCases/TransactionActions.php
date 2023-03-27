@@ -67,6 +67,7 @@ class TransactionActions
         $slip->staff_id = $post['staff_id'];
         $slip->transacted_on = Date::now()->format(config('app.date_format'));
         $slip->transaction_type_id = $post->transaction_type_id;
+        $slip->target_code = $post->has('target_code') ? $post->target_code : null;
         $slip->customer_id = $post->has('customer_id') ? $post->customer_id : null;
         $slip->supplier_target_id = $post->has('supplier_target_id') ? $post->supplier_target_id : null;
         $slip->entry_exit_target_id = $post->has('entry_exit_target_id') ? $post->entry_exit_target_id : null;
@@ -179,6 +180,7 @@ class TransactionActions
         $slip->transacted_on = Date::now()->format(config('app.date_format'));
         $slip->transaction_type_id = $post->transaction_type_id;
         $slip->customer_id = $post->has('customer_id') ? $post->customer_id : null;
+        $slip->target_code = $post->has('target_code') ? $post->target_code : null;
         $slip->supplier_target_id = $post->has('supplier_target_id') ? $post->supplier_target_id : null;
         $slip->entry_exit_target_id = $post->has('entry_exit_target_id') ? $post->entry_exit_target_id : null;
         $slip->payment_method_id = $post->has('payment_method_id') ? $post->payment_method_id : PaymentMethodType::CASH;
@@ -292,6 +294,7 @@ class TransactionActions
         $slip->customer_id = $post->has('customer_id') ? $post->customer_id : null;
         $slip->supplier_target_id = $post->has('supplier_target_id') ? $post->supplier_target_id : null;
         $slip->entry_exit_target_id = $post->has('entry_exit_target_id') ? $post->entry_exit_target_id : null;
+        $slip->target_code = $post->has('target_code') ? $post->target_code : null;
         $slip->payment_method_id = $post->has('payment_method_id') ? $post->payment_method_id : PaymentMethodType::CASH;
         $slip->cash_deposit_amount = $post->has('cash_deposit_amount') ? $post->cash_deposit_amount : null;
         $slip->cash_payout_amount = $post->has('cash_payout_amount') ? $post->cash_payout_amount : null;
@@ -403,6 +406,7 @@ class TransactionActions
         $slip->customer_id = $post->has('customer_id') ? $post->customer_id : null;
         $slip->supplier_target_id = $post->has('supplier_target_id') ? $post->supplier_target_id : null;
         $slip->entry_exit_target_id = $post->has('entry_exit_target_id') ? $post->entry_exit_target_id : null;
+        $slip->target_code = $post->has('target_code') ? $post->target_code : null;
         $slip->payment_method_id = $post->has('payment_method_id') ? $post->payment_method_id : PaymentMethodType::CASH;
         $slip->cash_deposit_amount = $post->has('cash_deposit_amount') ? $post->cash_deposit_amount : null;
         $slip->cash_payout_amount = $post->has('cash_payout_amount') ? $post->cash_payout_amount : null;

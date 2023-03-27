@@ -34,4 +34,10 @@ interface EntryExitTargetRepositoryInterface
      * @return bool|null
      */
     public function delete(EntryExitTarget $entity): ?bool;
+
+    /**
+     * @param string $code
+     * @return EntryExitTarget
+     */
+    public function findByCode(string $code): ?EntryExitTarget;
 }

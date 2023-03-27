@@ -1,34 +1,27 @@
 <x-base-layout>
+    <x-slot name="title">商品一覧</x-slot>
     <x-slot name="slot">
         <form id="form2"
                 class="w-full mb-3"
                 action="{{ route('product.name_search') }}"
                 method="post">
             @csrf
-            <div class="flex flex-wrap border-b-2 w-11/12 sm:w-11/12 lg:w-11/12">
-                <div class="px-3 mb-6 w-1/12 sm:w-1/12 lg:w-1/12">
-                    <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="" />
+            <div class="flex flex-wrap border-b-2 w-12/12 sm:w-12/12 lg:w-12/12">
+                <div class="px-3 mb-6 w-3/16 sm:w-3/16 lg:w-3/16">
+                    <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="　" />
                     <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
                             href="{{ route('product.create') }}">商品追加(F1)</a>
                 </div>
-                <div class="px-3 mb-6 w-11/12 sm:w-11/12 lg:w-11/12">
+                <div class="px-3 mb-6 w-11/16 sm:w-11/16 lg:w-11/16">
                     <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
-                        <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索" />
-                        <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" autofocus />
+                        <x-label for="product_search_type" class="w-5/12 sm:w-5/12 lg:w-5/12" value="商品名検索" />
+                        <x-input id="keyword" type="text" name="keyword" class="w-5/12 sm:w-5/12 lg:w-5/12" :value="old('keyword')" autofocus />
                         <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">検索(F9)</x-button>
                         <a id="F12" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
                                     href="{{ route('product.index') }}">クリア(F12)</a>
                     </div>
                 </div>
             </div>
-            {{--
-            <div class="px-3 mb-6 w-1/12 sm:w-1/12 lg:w-1/12">
-                    <x-select id="product_search_type" name="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" :items=$productSearchType :selected="old('product_search_type')" required />
-                    <x-select id="product_search_type" name="product_search_type" class="w-full" :items=$productSearchType :selected="old('product_search_type')" required />
-                    <a id="F12" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                            href="{{ route('product.index') }}">クリア(F12)</a>
-            </div>
-            --}}
         </form>
         
         <table class="table-auto w-full mb-2">

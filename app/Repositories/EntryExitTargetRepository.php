@@ -19,6 +19,18 @@ class EntryExitTargetRepository implements EntryExitTargetRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function findByCode(string $code): ?EntryExitTarget
+    {
+        $result = EntryExitTarget::where('code', $code)->get();
+        if (count($result) == 0) {
+            return null;
+        }
+        return $result[0];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function all(): LengthAwarePaginator
     {
         return DB::table('entry_exit_targets')->whereNull('deleted_at')->orderBy('id')->paginate(15);

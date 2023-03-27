@@ -22,4 +22,13 @@ class SupplierTargetService
     {
         return $this->repository->get($id);
     }
+
+    /**
+     * @param $id
+     * @return SupplierTarget|null
+     */
+    public function getByCode($code): ?SupplierTarget
+    {
+        return $this->repository->findByCode($code);
+    }
 }

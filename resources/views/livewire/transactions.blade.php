@@ -9,24 +9,41 @@
         <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">
             @switch($slip->transaction_type_id)
                 @case(1)
-                    <x-label for="customer_id" class="w-full" value="会員No."></x-label>
-                    <x-input id="customer_id" class="text-sm w-1/3 mr-2" type="text" name="customer_id" wire:model.lazy="slip.customer_id" ></x-input>
-                    <x-value class="w-2/3">{{ $slip->customer ? $slip->customer->name : '' }}</x-value>
+                    <x-label for="customer_code" class="w-full" value="会員No."></x-label>
+                    <x-input id="target_code" class="text-sm w-4/12 mr-2" type="text" name="target_code"
+                            wire:model.lazy="slip.target_code"
+                            wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="customer_id" class="text-sm w-0/12 mr-2" type="hidden" name="customer_id" wire:model.lazy="slip.customer_id" ></x-input>
+                    <x-input id="target_name" class="text-sm w-7/12 mr-2 bg-gray-100" type="text" name="target_name" wire:model.lazy="slip.target_name" disabled></x-input>
+                    
                     @break
                 @case(2)
                     <x-label for="supplier_target_id" class="w-full" value="仕入先No."></x-label>
-                    <x-input id="supplier_target_id" class="text-sm w-1/3 mr-2" type="text" name="supplier_target_id" wire:model.lazy="slip.supplier_target_id" ></x-input>
-                    <x-value class="w-2/3">{{ $slip->supplier_target ? $slip->supplier_target->name : '' }}</x-value>
+                    <x-input id="target_code" class="text-sm w-4/12 mr-2" type="text" name="target_code"
+                            wire:model.lazy="slip.target_code"
+                            wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="supplier_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="supplier_target_id" wire:model.lazy="slip.supplier_target_id" ></x-input>
+                    <x-input id="target_name" class="text-sm w-7/12 mr-2 bg-gray-100" type="text" name="target_name" wire:model.lazy="slip.target_name" disabled></x-input>
                     @break
                 @case(3)
                     <x-label for="entry_exit_target_id" class="w-full" value="入出庫No."></x-label>
-                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="text" name="entry_exit_target_id" wire:model.lazy="slip.entry_exit_target_id" ></x-input>
-                    <x-value class="w-2/3">{{ $slip->entry_exit_target ? $slip->entry_exit_target->name : '' }}</x-value>
+                    <x-input id="target_code" class="text-sm w-4/12 mr-2" type="text" name="target_code"
+                            wire:model.lazy="slip.target_code"
+                            wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="entry_exit_target_id" wire:model.lazy="slip.entry_exit_target_id" ></x-input>
+                    <x-input id="target_name" class="text-sm w-7/12 mr-2 bg-gray-100" type="text" name="target_name" wire:model.lazy="slip.target_name" disabled></x-input>
                     @break
                 @case(4)
                     <x-label for="entry_exit_target_id" class="w-full" value="入出庫No."></x-label>
-                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="text" name="entry_exit_target_id" wire:model.lazy="slip.entry_exit_target_id" ></x-input>
-                    <x-value class="w-2/3">{{ $slip->entry_exit_target ? $slip->entry_exit_target->name : '' }}</x-value>
+                    <x-input id="target_code" class="text-sm w-4/12 mr-2" type="text" name="target_code"
+                            wire:model.lazy="slip.target_code"
+                            wire:change="$emit('changeTarget', $event.target.value)"
+                            required></x-input>
+                    <x-input id="entry_exit_target_id" class="text-sm w-1/3 mr-2" type="hidden" name="entry_exit_target_id" wire:model.lazy="slip.entry_exit_target_id" ></x-input>
+                    <x-input id="target_name" class="text-sm w-7/12 mr-2 bg-gray-100" type="text" name="target_name" wire:model.lazy="slip.target_name" disabled></x-input>
                     @break
             @endswitch
         </div>
@@ -101,18 +118,6 @@
                          wire:model.lazy="product_code.{{ $key }}"
                          wire:change.lazy="$emit('changeProduct', {{ $key }}, $event.target.value)"
                          name="lines[{{ $key }}][product_code]"></x-input>
-                {{--
-                <x-input class="w-full text-sm" type="text" wire:model.lazy="product_code.{{ $key }}"
-                         name="lines[{{ $key }}][product_code]"></x-input>
-                --}}
-                {{--         
-                
-                    <x-input class="w-full text-sm" type="text"
-                         wire:model.lazy="transaction_lines.{{ $index }}.product_code"
-                         wire:change.lazy="$emit('changeProduct', {{ $index }}, $event.target.value)"
-                         value="{{ $transaction_line->product_code }}"
-                         name="lines[{{ $index }}][product_code]"></x-input>
-                --}}
             </div>
             <div class="px-1 mb-2 w-3/12">
                 {{-- 商品名 --}}
@@ -190,7 +195,9 @@
                 {{-- 削除 --}}
             <x-button class="bg-red-500 mr-1" wire:click.prevent="del({{ $index }},{{ $key }})">削除</x-button>
             </div>
+            <!-- This example requires Tailwind CSS v2.0+ -->
         </div>
+
         <x-input name="lines[{{ $key }}][product_id]" type="hidden" wire:model.lazy="product_id.{{ $key }}" />
         <x-input name="lines[{{ $key }}][product_name]" type="hidden" wire:model.lazy="product_name.{{ $key }}" />
         <x-input name="lines[{{ $key }}][avg_stocking_price]" type="hidden" wire:model.lazy="avg_stocking_price.{{ $key }}" />
@@ -211,7 +218,6 @@
         </div>
         --}}
     @endforeach
-    
     {{--
     <div class="flex flex-wrap px-1 mb-2">
         <x-button class="bg-gray-600 mr-1" wire:click.prevent="add({{ $index }}, 5)">5行 追加</x-button>

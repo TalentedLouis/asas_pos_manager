@@ -24,4 +24,9 @@ class CustomerService
     {
         return $this->repository->get($id);
     }
+
+    public function getByCode($code): ?Customer
+    {
+        return $this->repository->findByCode($code);
+    }
 }

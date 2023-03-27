@@ -1,4 +1,5 @@
 <x-base-layout>
+    <x-slot name="title">レシート更新</x-slot>
     <x-slot name="slot">
         <div class="w-full">
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
@@ -9,39 +10,39 @@
                 @csrf
                 @method('put')
                 <div class="flex flex-wrap">
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="name" class="w-full" value="店名" />
                         <x-input id="name" class="w-full" type="text" name="name" :value="old('name', $receipt_config->name)" required autofocus />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="address" class="w-full" value="住所" />
                         <x-input id="address" class="w-full" type="text" name="address" :value="old('address', $receipt_config->address)" required />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="telephone" class="w-full" value="電話番号" />
                         <x-input id="telephone" class="w-full" type="text" name="telephone" :value="old('telephone', $receipt_config->telephone)" required />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="text_1" class="w-full" value="フリーテキスト１" />
                         <x-input id="text_1" class="w-full" type="text" name="text_1" :value="old('text_1', $receipt_config->text_1)" />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="text_2" class="w-full" value="フリーテキスト２" />
                         <x-input id="text_2" class="w-full" type="text" name="text_2" :value="old('text_2', $receipt_config->text_2)" />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="text_3" class="w-full" value="フリーテキスト３" />
                         <x-input id="text_3" class="w-full" type="text" name="text_3" :value="old('text_3', $receipt_config->text_3)" />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="text_4" class="w-full" value="フリーテキスト４" />
                         <x-input id="text_4" class="w-full" type="text" name="text_4" :value="old('text_4', $receipt_config->text_4)" />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="text_5" class="w-full" value="フリーテキスト５" />
                         <x-input id="text_5" class="w-full" type="text" name="text_5" :value="old('text_5', $receipt_config->text_5)" />
                     </div>
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="header_image_file" class="w-full" value="ヘッダー画像" />
                         <div class="custom-file">
                             <x-input id="header_image_file" class="w-full" type="file" name="header_image_file" />
@@ -62,7 +63,7 @@
                         </div>
                     @endif
 
-                    <div class="px-3 mb-6 w-full">
+                    <div class="px-2 mb-4 w-full">
                         <x-label for="footer_image_file" class="w-full" value="フッター画像" />
                         <div class="custom-file">
                             <x-input id="footer_image_file" class="w-full" type="file" name="footer_image_file" />

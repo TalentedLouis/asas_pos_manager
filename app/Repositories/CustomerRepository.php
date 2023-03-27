@@ -28,6 +28,28 @@ class CustomerRepository implements CustomerRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function findByCode(string $code): ?Customer
+    {
+        $result = Customer::where('code', $code)->get();
+        if (count($result) == 0) {
+            return null;
+        }
+        return $result[0];
+    }
+
+    public function findByName(string $name): LengthAwarePaginator
+    {
+   
+        $query = Customer::query();
+        $query->select('id','code','name')
+              ->where('name', 'LIKE' ,'%'.$name.'%');
+        return $query->orderBy("name")
+              ->paginate(15);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function newEntity(): Customer
     {
         return new Customer();
