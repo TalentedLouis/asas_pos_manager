@@ -40,6 +40,7 @@ class UpdateTransactions extends Component
     //2023add
     public $total_quantity;
     public $total_amount_ctax_included;
+    public $index = 0;
     //2023add
     protected $listeners = [
         'changeStaff',
@@ -47,6 +48,8 @@ class UpdateTransactions extends Component
         'changeProduct',
         'changeQuantity',
         'changeUnitPrice',
+        'add',
+        'delList'
     ];
 
     protected $rules = [
@@ -60,6 +63,7 @@ class UpdateTransactions extends Component
         'transaction_lines.*.product_id' => '',
         'transaction_lines.*.product_code' => '',
         'transaction_lines.*.product_name' => '',
+        'transaction_lines.*.note' => '',
         'transaction_lines.*.quantity' => '',
         'transaction_lines.*.unit_price' => '',
         'transaction_lines.*.tax_rate_type_id' => '',
@@ -79,6 +83,24 @@ class UpdateTransactions extends Component
         'transaction_slip.total_amount_ctax_included' => '',
         // 2023 ADD E
     ];
+
+    public function mount()
+    {
+        $this->transaction_slip = TransactionSlip::findOrFail($this->slipId);
+        $this->transaction_lines = $this->transaction_slip->transaction_lines;
+        $this->changeStaff($this->transaction_slip->staff_id);
+        $this->changeTarget($this->transaction_slip->target_code);
+        /*
+        if ($this->transaction_slip->transaction_type_id === TransactionType::SALES) {
+            $this->changeTarget($this->transaction_slip->target_code);
+        } elseif ($this->transaction_slip->transaction_type_id === TransactionType::PURCHASE) {
+            $this->changeTarget($this->transaction_slip->target_code);
+        } else {
+            $this->changeTarget($this->transaction_slip->entry_exit_target_id);
+        }
+        */
+        // $this->add(5);
+    }
 
     public function changeStaff($value)
     {
@@ -113,8 +135,14 @@ class UpdateTransactions extends Component
                 $target = $entryExitTargetService->getByCode($value);
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::ENTRY_STOCK) {
                 $target = $entryExitTargetService->getByCode($value);
-            } else {
-                $target = EntryExitTarget::find($value);
+            } elseif ($this->transaction_slip->transaction_type_id === TransactionType::EXIT_MONEY 
+                         or $this->transaction_slip->transaction_type_id === TransactionType::EXIT_MONEY) {
+                $this->transaction_slip->customer_id = null;
+                $this->transaction_slip->supplier_target_id = null;
+                $this->transaction_slip->entry_exit_target_id = null;
+                $this->transaction_slip->target_name = null;
+                $this->transaction_slip->target_code = null;
+                return null;
             }
             if (is_null($target)) {
                 $this->transaction_slip->customer_id = null;
@@ -151,14 +179,14 @@ class UpdateTransactions extends Component
         $stockService = App::make(StockService::class);
         if ($value !== '') {
             $product = $productService->getByCode($value);
-//            $product = Product::where('code', '=', $value)->first();
+            //$product = Product::where('code', '=', $value)->first();
             $stock = null;
             if ($product !== null) {
                 $this->transaction_lines[$index]->product_id = $product->id;
                 $this->transaction_lines[$index]->product_name = $product->name;
                 $this->transaction_lines[$index]->product_code = $product->code;
                 $stock = $stockService->getThisStock($product->id);
-//                $stock = Stock::where('product_id', '=', $product->id)->where('shop_id', '=', Auth::user()->shop->id)->first();
+                //$stock = Stock::where('product_id', '=', $product->id)->where('shop_id', '=', Auth::user()->shop->id)->first();
                 //2023add s
                 if (!is_numeric($this->transaction_lines[$index]->quantity)){
                     $this->test_message = 'test';
@@ -218,26 +246,8 @@ class UpdateTransactions extends Component
 
     public function del($index)
     {
-        $this->transaction_lines[$index]->product_id = null;
-        $this->transaction_lines[$index]->product_code = null;
-        $this->transaction_lines[$index]->product_name = null;
-        $this->transaction_lines[$index]->avg_stocking_price = null;
-        $this->transaction_lines[$index]->this_stock_quantity = null;
-        $this->transaction_lines[$index]->unit_price = null;
-        $this->transaction_lines[$index]->quantity = null;
-        $this->transaction_lines[$index]->tax_rate_type_id = null;
-        $this->transaction_lines[$index]->taxable_method_type_id = null;
-        $this->transaction_lines[$index]->final_unit_price_tax_included = null;
-        $this->transaction_lines[$index]->final_unit_price_tax_excluded = null;
-        $this->transaction_lines[$index]->ctax_price = null;
-        $this->transaction_lines[$index]->include_tax = null;
-        $this->transaction_lines[$index]->exclude_tax = null;
-        $this->transaction_lines[$index]->ctax_rate = null;
-        $this->transaction_lines[$index]->subtotal_tax_included = null;
-        $this->transaction_lines[$index]->subtotal_tax_excluded = null;
+        unset($this->transaction_lines[$index]);
         $this->Totalcalc();
-        //$index = $index - 1;
-        //$this->index = $index;
     }
 
     public function calcTax($index)
@@ -292,31 +302,22 @@ class UpdateTransactions extends Component
         $this->transaction_slip->total_amount_ctax_included = $this->total_amount_ctax_included;
     }
 
-    public function add($index, $counts = 1)
+    public function add1($index, $counts)
     {
         for ($i = 0; $i < $counts; $i++) {
             $this->transaction_lines[$index] = new TransactionLine();
-            //$index = $index + 1;
-            //$this->index = $index;
+            $index = $index + 1;
+            // $this->index = $index;
         }
     }
 
-    public function mount()
+    public function add($counts)
     {
-        $this->transaction_slip = TransactionSlip::findOrFail($this->slipId);
-        $this->transaction_lines = $this->transaction_slip->transaction_lines;
-        $this->changeStaff($this->transaction_slip->staff_id);
-        $this->changeTarget($this->transaction_slip->target_code);
-        /*
-        if ($this->transaction_slip->transaction_type_id === TransactionType::SALES) {
-            $this->changeTarget($this->transaction_slip->target_code);
-        } elseif ($this->transaction_slip->transaction_type_id === TransactionType::PURCHASE) {
-            $this->changeTarget($this->transaction_slip->target_code);
-        } else {
-            $this->changeTarget($this->transaction_slip->entry_exit_target_id);
+        $index = count($this->transaction_lines);
+        for ($i = 0; $i < $counts; $i++) {
+            $this->transaction_lines[$index] = new TransactionLine();
+            $index = $index + 1;
         }
-        */
-        //add(50,3);
     }
 
     public function render()

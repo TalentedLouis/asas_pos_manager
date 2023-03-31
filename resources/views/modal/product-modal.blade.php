@@ -76,7 +76,7 @@
                 let resultTable = '';
                 for(let i = 0; i < data.length; i ++){
                     resultTable += "<tr class='border bg-white odd:bg-gray-100'>";
-                    resultTable += "<td class='py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-center'><input type='button' id='product' name='product_select' onclick='handleProductClick(" + JSON.stringify(data[i]) + ");' value='選択'></td>"
+                    resultTable += "<td class='py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-center'><input type='button' id='product' class='inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 px-6 py-3 bg-blue-500' name='product_select' onclick='handleProductClick(" + JSON.stringify(data[i]) + ");' value='選択'></td>"
                     //resultTable += "<td class='py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-center'><input type='radio' id='product' name='product_select' onclick='handleProductClick(" + JSON.stringify(data[i]) + ");' value='" + JSON.stringify(data[i]) + "'></td>"
                     resultTable += "<td class='py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right'>" + data[i].code + "</td>"
                     resultTable += "<td class='py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left'>" + data[i].name + "</td>"
