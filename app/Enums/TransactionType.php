@@ -18,6 +18,6 @@ final class TransactionType extends Enum
     const PURCHASE = 2;
     const ENTRY_STOCK = 3;
     const EXIT_STOCK = 4;
-    const DEPOSITS = 5;
-    const WITHDRAWALS = 6;
+    const ENTRY_MONEY = 5;
+    const EXIT_MONEY = 6;
 }

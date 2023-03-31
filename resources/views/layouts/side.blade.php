@@ -18,7 +18,7 @@
                     入庫処理</a>
                 <a class="block p-3" href="{{ route('exit_stock.create') }}">
                     出庫処理</a>
-                <a class="block p-3" href="">
+                <a class="block p-3" href="{{ route('exit_money.create') }}">
                     出金処理</a>
                 <a class="block p-3" href="">
                     入金処理</a>

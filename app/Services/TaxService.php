@@ -24,6 +24,8 @@ class TaxService
                 'priceTaxIncluded' => $price,
                 'priceTaxExcluded' => $price,
                 'taxPrice' => 0,
+                'includeTax' => 0,
+                'excludeTax' => 0,
                 'taxRate' => $taxRate,
             ];
         } elseif ($taxableMethodType == TaxableMethodType::STANDARD_TAX) {
@@ -51,6 +53,6 @@ class TaxService
                 'excludeTax' => $taxPrice,
                 'taxRate' => $taxRate,
             ];
-        }
+        } 
     }
 }

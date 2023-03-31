@@ -10,6 +10,8 @@ class TransactionLine extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $connection = "mysql";
+
     public function transaction_slip(){
         $this->belongsTo(TransactionSlip::class);
     }

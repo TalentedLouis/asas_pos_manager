@@ -56,14 +56,11 @@
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-5/16 sm:w-5/16 lg:w-5/16 text-left">
                         <a class="mr-0.5 sm:mr-1 lg:mr-2" href="{{ route('customer.edit', ['customer'=>$customer->id]) }}">
                             <x-far-edit class="inline-block w-6 h-6 text-blue-600"/></a>
-                        <form action="{{ route('customer.destroy', ['customer'=>$customer->id]) }}"
-                              class="inline-block"
-                              method="post">
-                            @csrf
-                            @method('DELETE')
-                            <a href="{{ route('customer.destroy', ['customer'=>$customer->id]) }}" onclick="event.preventDefault(); this.closest('form').submit();">
-                                <x-far-trash-alt class="inline-block w-6 h-6 text-red-600"/></a>
-                        </form>
+                        {{--
+                        <x-delete :route="route('customer.destroy', ['customer'=>$customer->id])">
+                            <x-far-trash-alt class="inline-block w-6 h-6 text-red-600"/>
+                        </x-delete>
+                        --}}
                     </td>
                 </tr>
             @endforeach

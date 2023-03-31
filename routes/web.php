@@ -13,6 +13,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExitStockController;
 use App\Http\Controllers\EntryStockController;
+use App\Http\Controllers\ExitMoneyController;
 use App\Http\Controllers\ReceiptConfigController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ShopConfigController;
@@ -110,5 +111,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::match(['PUT', 'PATCH'], '/entry_stock/{slip}', [EntryStockController::class, 'update'])->name('entry_stock.update');
     Route::delete('/entry_stock/{slip}', [EntryStockController::class, 'destroy'])->name('entry_stock.destroy');
     Route::post('/entry_stock/search', [EntryStockController::class, 'search'])->name('entry_stock.search');
+
+    Route::get('/exit_money', [ExitMoneyController::class, 'index'])->name('exit_money.index');
+    Route::get('/exit_money/create', [ExitMoneyController::class, 'create'])->name('exit_money.create');
+    Route::post('/exit_money', [ExitMoneyController::class, 'store'])->name('exit_money.store');
+    Route::get('/exit_money/{slip}/edit', [ExitMoneyController::class, 'edit'])->name('exit_money.edit');
+    Route::match(['PUT', 'PATCH'], '/exit_money/{slip}', [ExitMoneyController::class, 'update'])->name('exit_money.update');
+    Route::delete('/exit_money/{slip}', [ExitMoneyController::class, 'destroy'])->name('exit_money.destroy');
+    Route::post('/exit_money/search', [ExitMoneyController::class, 'search'])->name('exit_money.search');
 });
 require __DIR__ . '/auth.php';

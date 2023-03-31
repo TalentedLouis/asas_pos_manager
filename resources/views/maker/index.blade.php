@@ -23,14 +23,9 @@
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-9/12 sm:w-9/12 lg:w-9/12 text-left">
                         <a class="mr-0.5 sm:mr-1 lg:mr-2" href="{{ route('maker.edit', ['maker'=>$maker->id]) }}">
                             <x-far-edit class="inline-block w-6 h-6 text-blue-600"/></a>
-                        <form action="{{ route('maker.destroy', ['maker'=>$maker->id]) }}"
-                              class="inline-block"
-                              method="post">
-                            @csrf
-                            @method('DELETE')
-                            <a href="{{ route('maker.destroy', ['maker'=>$maker->id]) }}" onclick="event.preventDefault(); this.closest('form').submit();">
-                                <x-far-trash-alt class="inline-block w-6 h-6 text-red-600"/></a>
-                        </form>
+                        <x-delete :route="route('maker.destroy', ['maker'=>$maker->id])">
+                            <x-far-trash-alt class="inline-block w-6 h-6 text-red-600"/>
+                        </x-delete>
                     </td>
                 </tr>
             @endforeach

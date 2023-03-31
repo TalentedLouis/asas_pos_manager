@@ -52,7 +52,7 @@ class ShopController extends Controller
         ShopRequest $request
     ): Redirector|RedirectResponse|Application {
         $this->action->create($request);
-        $this->action->jsonUpload();
+        //$this->action->jsonUpload();
         return redirect(route("shop.index"));
     }
 
@@ -94,7 +94,7 @@ class ShopController extends Controller
     public function destroy(Shop $shop): Redirector|RedirectResponse|Application
     {
         $this->action->delete($shop);
-        $this->action->jsonUpload();
+        //$this->action->jsonUpload();
         return redirect(route("shop.index"));
     }
 }
