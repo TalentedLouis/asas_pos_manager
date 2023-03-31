@@ -184,7 +184,7 @@
                         value="{{ $transaction_line->product_code }}"
                         name="lines[{{ $index }}][product_code]"
                         id="product-code-{{ $index }}"
-                        onKeydown="if (event.keyCode == 9) moveCursor({{$index}})"
+                        onKeydown="if (event.keyCode == 13) moveCursor(event, {{$index}})"
                         >
                     </x-input>
                 </div>
@@ -301,8 +301,14 @@
         localStorage.setItem('purchase_key', purchaseKey);
         localStorage.setItem('page_type', pageType);
     }
-    function moveCursor(id){
+
+    function moveCursor(e, id){
         let currentElement = document.getElementById('product-code-' + id);
-        currentElement.parentElement.parentElement.children[9].children[0].focus();
+        let nextSeq = Number(id) + 1;
+        let newId = 'product-code-' + nextSeq;
+        let nextElement = document.getElementById(newId);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
     }
 </script>

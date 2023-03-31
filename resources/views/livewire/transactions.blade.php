@@ -179,7 +179,7 @@
                         wire:model.lazy="product_code.{{ $key }}"
                         wire:change.lazy="$emit('changeProduct', {{ $key }}, $event.target.value)"
                         name="lines[{{ $key }}][product_code]"
-                        onKeydown="if (event.keyCode == 9) moveCursor({{$key}})"
+                        onKeydown="if (event.keyCode == 13) moveCursor(event, {{$key}})"
                         >
                     </x-input>
                 </div>
@@ -189,13 +189,25 @@
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 数量 --}}
-                    <x-input class="row_quantity w-full text-right text-sm font-bold" type="text" wire:model.lazy="quantity.{{ $key }}"
-                            name="lines[{{ $key }}][quantity]"></x-input>
+                    <x-input 
+                        class="row_quantity w-full text-right text-sm font-bold" 
+                        type="text" 
+                        wire:model.lazy="quantity.{{ $key }}"
+                        name="lines[{{ $key }}][quantity]"
+                        wire:change="$emit('changeQuantity', {{ $key }}, $event.target.value)"
+                        >
+                    </x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 単価 --}}
-                    <x-input class="w-full text-right text-sm" type="text" wire:model.lazy="unit_price.{{ $key }}"
-                            name="lines[{{ $key }}][unit_price]"></x-input>
+                    <x-input 
+                        class="w-full text-right text-sm" 
+                        type="text" 
+                        name="lines[{{ $key }}][unit_price]"
+                        wire:model.lazy="unit_price.{{ $key }}"
+                        wire:change="$emit('changeUnitPrice', {{ $key }}, $event.target.value)"
+                        >
+                    </x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     <div class="flex flex-wrap">
@@ -285,8 +297,14 @@
             document.getElementById('keyword').focus();
         },700);
     }
-    function moveCursor(id){
+
+    function moveCursor(e, id){
         let currentElement = document.getElementById('line-' + id);
-        currentElement.parentElement.parentElement.children[9].children[0].focus();
+        let nextSeq = Number(id) + 1;
+        let newId = 'line-' + nextSeq;
+        let nextElement = document.getElementById(newId);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
     }
 </script>
