@@ -190,22 +190,26 @@
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 数量 --}}
                     <x-input 
+                        id="quantity-{{ $key }}"
                         class="row_quantity w-full text-right text-sm font-bold" 
                         type="text" 
                         wire:model.lazy="quantity.{{ $key }}"
                         name="lines[{{ $key }}][quantity]"
                         wire:change="$emit('changeQuantity', {{ $key }}, $event.target.value)"
+                        onKeydown="if (event.keyCode == 13) moveCursorToPrice(event, {{$key}})"
                         >
                     </x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 単価 --}}
                     <x-input 
+                        id="unit-price-{{ $key }}"
                         class="w-full text-right text-sm" 
                         type="text" 
                         name="lines[{{ $key }}][unit_price]"
                         wire:model.lazy="unit_price.{{ $key }}"
                         wire:change="$emit('changeUnitPrice', {{ $key }}, $event.target.value)"
+                        onKeydown="if (event.keyCode == 13) moveCursorToModal(event, {{$key}})"
                         >
                     </x-input>
                 </div>
@@ -261,11 +265,26 @@
                 </div>
                 <div class="px-1 mb-2 w-1/24">
                     {{-- 検索 --}}
-                    <x-button class="bg-blue-500 mr-1" wire:click.prevent="" onclick="openModal('{{$key}}', 'create');">検索</x-button>
+                    <x-button 
+                        id="open-modal-{{$key}}" 
+                        class="bg-blue-500 mr-1" 
+                        wire:click.prevent="" 
+                        onclick="openModal('{{$key}}', 'create');"
+                        onKeydown="if (event.keyCode == 13) moveCursorToDel(event, {{$key}})"
+                        >
+                        検索
+                    </x-button>
                 </div>
                 <div class="px-1 mb-2 w-1/24">
                     {{-- 削除 --}}
-                    <x-button class="bg-red-500 mr-1" wire:click.prevent="del({{ $key }})">削除</x-button>
+                    <x-button
+                        id="del-{{$key}}"
+                        class="bg-red-500 mr-1" 
+                        wire:click.prevent="del({{ $key }})"
+                        onKeydown="if (event.keyCode == 13) moveCursor(event, {{$key}})"
+                        >
+                        削除
+                    </x-button>
                 </div>
                 <!-- This example requires Tailwind CSS v2.0+ -->
             </div>
@@ -303,6 +322,24 @@
         let nextSeq = Number(id) + 1;
         let newId = 'line-' + nextSeq;
         let nextElement = document.getElementById(newId);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();        
+    }
+    function moveCursorToPrice(e, id){
+        let nextElement = document.getElementById('unit-price-' + id);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+    function moveCursorToModal(e, id){
+        let nextElement = document.getElementById('open-modal-' + id);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+    function moveCursorToDel(e, id){
+        let nextElement = document.getElementById('del-' + id);
         if (nextElement) nextElement.focus();
         
         e.preventDefault();

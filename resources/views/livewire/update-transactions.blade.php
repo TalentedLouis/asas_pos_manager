@@ -195,24 +195,28 @@
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 数量 --}}
                     <x-input 
+                        id="quantity-{{ $index }}"
                         type="text"
                         class="row_quantity w-full text-right text-sm font-bold" 
                         wire:model.lazy="transaction_lines.{{ $index }}.quantity"
                         wire:change="$emit('changeQuantity', {{ $index }}, $event.target.value)"
                         value="{{ number_format($transaction_line->quantity) }}"
                         name="lines[{{ $index }}][quantity]" 
+                        onKeydown="if (event.keyCode == 13) moveCursorToPrice(event, {{$index}})"
                         onchange="totalCalc()">
                     </x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 単価 --}}
                     <x-input 
+                        id="unit-price-{{ $index }}"
                         class="w-full text-right text-sm" 
                         type="text"
                         wire:model.lazy="transaction_lines.{{ $index }}.unit_price"
                         wire:change="$emit('changeUnitPrice', {{ $index }}, $event.target.value)"
                         value="{{ number_format($transaction_line->unit_price) }}"
                         name="lines[{{ $index }}][unit_price]" 
+                        onKeydown="if (event.keyCode == 13) moveCursorToModal(event, {{$index}})"
                         onchange="totalCalc()">
                     </x-input>
                 </div>
@@ -266,11 +270,26 @@
                 </div>
                 <div class="px-1 mb-2 w-1/24">
                     {{-- 検索 --}}
-                    <x-button class="bg-blue-500 mr-1" wire:click.prevent="" onclick="openModal('{{$index}}', 'edit');">検索</x-button>
+                    <x-button 
+                        id="open-modal-{{$index}}" 
+                        class="bg-blue-500 mr-1" 
+                        wire:click.prevent="" 
+                        onclick="openModal('{{$index}}', 'edit');"
+                        onKeydown="if (event.keyCode == 13) moveCursorToDel(event, {{$index}})"
+                        >
+                        検索
+                    </x-button>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 削除 --}}
-                    <x-button class="bg-gray-600 mr-1" wire:click.prevent="del({{ $index }})">削除</x-button>
+                    <x-button
+                        id="del-{{$index}}"
+                        class="bg-gray-600 mr-1" 
+                        wire:click.prevent="del({{ $index }})"
+                        onKeydown="if (event.keyCode == 13) moveCursor(event, {{$index}})"
+                        >
+                        削除
+                    </x-button>
                 </div>
                 <x-input name="lines[{{ $index }}][product_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_id" />
                 <x-input name="lines[{{ $index }}][product_name]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_name" />
@@ -307,6 +326,25 @@
         let nextSeq = Number(id) + 1;
         let newId = 'product-code-' + nextSeq;
         let nextElement = document.getElementById(newId);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+
+    function moveCursorToPrice(e, id){
+        let nextElement = document.getElementById('unit-price-' + id);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+    function moveCursorToModal(e, id){
+        let nextElement = document.getElementById('open-modal-' + id);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+    function moveCursorToDel(e, id){
+        let nextElement = document.getElementById('del-' + id);
         if (nextElement) nextElement.focus();
         
         e.preventDefault();
