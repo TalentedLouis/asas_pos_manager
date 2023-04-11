@@ -14,6 +14,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExitStockController;
 use App\Http\Controllers\EntryStockController;
 use App\Http\Controllers\ExitMoneyController;
+use App\Http\Controllers\EntryMoneyController;
 use App\Http\Controllers\ReceiptConfigController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ShopConfigController;
@@ -22,6 +23,9 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SupplierTargetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\DailyRenewalController;
+use App\Http\Controllers\StockTakingController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,8 +68,13 @@ Route::group(['middleware' => 'auth'], function () {
         'staff' => StaffController::class,
         'room' => RoomController::class,
         'receipt_config' => ReceiptConfigController::class,
-        'shop_config' => ShopConfigController::class
+        'shop_config' => ShopConfigController::class,
+        'daily_renewal' => DailyRenewalController::class,
+        'stock_taking' => StockTakingController::class
     ]);
+    Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+    Route::post('/report/search', [ReportController::class, 'search'])->name('report.search');
+    
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
@@ -119,5 +128,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::match(['PUT', 'PATCH'], '/exit_money/{slip}', [ExitMoneyController::class, 'update'])->name('exit_money.update');
     Route::delete('/exit_money/{slip}', [ExitMoneyController::class, 'destroy'])->name('exit_money.destroy');
     Route::post('/exit_money/search', [ExitMoneyController::class, 'search'])->name('exit_money.search');
+
+    Route::get('/entry_money', [EntryMoneyController::class, 'index'])->name('entry_money.index');
+    Route::get('/entry_money/create', [EntryMoneyController::class, 'create'])->name('entry_money.create');
+    Route::post('/entry_money', [EntryMoneyController::class, 'store'])->name('entry_money.store');
+    Route::get('/entry_money/{slip}/edit', [EntryMoneyController::class, 'edit'])->name('entry_money.edit');
+    Route::match(['PUT', 'PATCH'], '/entry_money/{slip}', [EntryMoneyController::class, 'update'])->name('entry_money.update');
+    Route::delete('/entry_money/{slip}', [EntryMoneyController::class, 'destroy'])->name('entry_money.destroy');
+    Route::post('/entry_money/search', [EntryMoneyController::class, 'search'])->name('entry_money.search');
+
+    Route::get('/stock_taking/{product?}/edit', [StockTakingController::class, 'edit'])->name('stock_taking.edit');
+    Route::post('/stock_taking/code_search', [StockTakingController::class, 'code_search'])->name('stock_taking.code_search');
+    Route::match(['PUT', 'PATCH'], '/stock_taking/{product}', [StockTakingController::class, 'update'])->name('stock_taking.update');
+    Route::get('/stock_taking', [StockTakingController::class, 'index'])->name('stock_taking.index');
+    Route::get('/stock_taking/select', [StockTakingController::class, 'select'])->name('stock_taking.select');
 });
 require __DIR__ . '/auth.php';

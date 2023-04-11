@@ -20,6 +20,16 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function newKariEntity(): ?Product
+    {
+        $entity = new Product();
+        $entity -> id = '';
+        return $entity;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function findByCode(string $code): ?Product
     {
         $result = Product::where('code', $code)->get();

@@ -1,5 +1,5 @@
 <x-base-layout>
-    <x-slot name="title">出庫一覧</x-slot>
+    <x-slot name="title">出庫一覧　　　　　処理日付：{{ $trans_date }}</x-slot>
     <x-slot name="slot">
         <div class="w-full mb-3">
             <div class="flex flex-wrap">

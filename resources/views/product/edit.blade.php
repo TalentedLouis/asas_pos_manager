@@ -10,7 +10,9 @@
                 <div class="flex flex-wrap border-b-2">
                     <div class="px-1 mb-1 w-full sm:w-1/2 lg:w-1/3">
                         <x-label for="keyword" value="商品コードで検索する" />
-                        <x-input id="keyword" type="number" name="keyword" class="w-2/3" :value="old('keyword')" required autofocus />
+                        <x-input id="keyword" type="number" name="keyword" class="w-2/3 ime-disabled" :value="old('keyword')" 
+                                onKeydown="if (event.keyCode == 13) F5_Click()"
+                                required autofocus />
                         <x-button id="F5" type="submit" class="px-6 py-3 bg-blue-500">検索(F5)</x-button>
                     </div>
                     <div class="px-1 mb-1 w-full sm:w-1/2 lg:w-1/3">
@@ -28,16 +30,24 @@
                 @csrf
                 @method('put')
                 <div class="flex flex-wrap">
-                    <div class="w-full">
+                    <div class="flex flex-wrap w-full">
                         <div class="px-1 mb-1 w-1/3 sm:w-1/3 lg:w-1/3">
                             <x-label for="code" value="商品コード" />
-                            <x-input id="code" type="number" name="code" class="w-full" :value="old('code', $product->code)" required />
+                            <x-input id="code" type="number" name="code" class="w-full bg-yellow-100 ime-disabled" :value="old('code', $product->code)" required />
+                        </div>
+                        <div class="px-1 mb-1 w-1/3 sm:w-1/3 lg:w-1/3">
+                            <x-label for="code" value="　" />
+                            @if($is_add === true)
+                                <x-button type="button" class="px-6 py-3 bg-green-500">登録済</x-button>
+                            @else
+                                <x-button type="button" class="px-6 py-3 bg-yellow-700">未登録</x-button>   
+                            @endif
                         </div>
                     </div>
                     <div class="flex flex-wrap border-b-2 w-full">
                         <div class="px-1 mb-1 w-1/3 sm:w-1/3 lg:w-1/3">
                             <x-label for="name" value="商品名" />
-                            <x-input id="name" type="text" name="name" class="w-full" :value="old('name', $product->name)" required />
+                            <x-input id="name" type="text" name="name" class="w-full ime-normal" :value="old('name', $product->name)" required />
                         </div>
                         <div class="px-1 mb-1 w-1/3 sm:w-1/3 lg:w-1/3">
                             <x-label for="name_read" value="商品カナ" />
@@ -68,7 +78,7 @@
                     </div>
                     <div class="px-1 mb-1 w-full sm:w-1/3">
                         <x-label for="sell_price" value="販売価格" />
-                        <x-input id="sell_price" type="number" name="sell_price" step="0.01" class="w-full" :value="old('sell_price', @$stock->sell_price)" required />
+                        <x-input id="sell_price" type="number" name="sell_price" step="0.01" class="w-full bg-yellow-100" :value="old('sell_price', @$stock->sell_price)" required />
                     </div>
                     <div class="px-1 mb-1 w-full sm:w-1/3">
                         <x-label for="sell_tax_rate_type_id" value="販売価格 税設定" />
@@ -82,7 +92,7 @@
 
                     <div class="px-1 mb-1 w-full sm:w-1/3">
                         <x-label for="stocking_price" value="仕入価格" />
-                        <x-input id="stocking_price" type="number" name="stocking_price" step="0.01" class="w-full" :value="old('stocking_price', @$stock->stocking_price)" required />
+                        <x-input id="stocking_price" type="number" name="stocking_price" step="0.01" class="w-full bg-yellow-100" :value="old('stocking_price', @$stock->stocking_price)" required />
                     </div>
                     <div class="px-1 mb-1 w-full sm:w-1/3">
                         <x-label for="stocking_tax_rate_type_id" value="仕入価格 税設定" />
@@ -139,10 +149,15 @@
                 </table>
                 <div class="flex py-2 px-2 items-start justify-start">
                     <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                       href="{{ route('product.index') }}">戻る(F1)</a>
+                       href="{{ route('product.index') }}">商品一覧(F1)</a>
                     <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">更新する(F9)</x-button>
                 </div>
             </form>
         </div>
     </x-slot>
 </x-base-layout>
+<script type="text/javascript">
+    function F5_Click(){
+        document.getElementById("F5").click();
+    }
+</script>

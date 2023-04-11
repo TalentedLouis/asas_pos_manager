@@ -27,6 +27,7 @@ class ShopConfigRequest extends FormRequest
             'delay_minutes' => ['required', 'integer'],
             'exit_reserve_minutes' => ['required', 'integer'],
             'slip_number_sequence' => ['required', 'integer'],
+            'trans_date' => ['required', 'date'],
         ];
     }
 
@@ -36,6 +37,8 @@ class ShopConfigRequest extends FormRequest
             'delay_minutes' => '延長時間(分)',
             'exit_reserve_minutes' => '退室予備時間(分)',
             'slip_number_sequence' => '伝票番号 連番',
+            'trans_date' => '処理日付',
+
         ];
     }
 }

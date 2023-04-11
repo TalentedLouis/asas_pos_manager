@@ -58,7 +58,7 @@ class CustomerController extends Controller
     public function store(CustomerRequest $request): Redirector|RedirectResponse|Application
     {
         $this->action->create($request);
-        return redirect(route('customer.index'));
+        return redirect(route('customer.create'));
     }
 
     /**
@@ -98,7 +98,7 @@ class CustomerController extends Controller
     public function update(CustomerRequest $request, Customer $customer): Redirector|RedirectResponse|Application
     {
         $this->action->update($customer, $request);
-        return redirect(route('customer.index'));
+        return redirect(route('customer.create'));
     }
 
     /**

@@ -19,6 +19,11 @@ class StockService
         return $this->stockRepository->getOne($productId);
     }
 
+    public function getOtherStock(int $productId): ?Stock
+    {
+        return $this->stockRepository->getOtherOne($productId);
+    }
+
     public function getKariStock(): ?Stock
     {
         return $this->stockRepository->newKariEntity();

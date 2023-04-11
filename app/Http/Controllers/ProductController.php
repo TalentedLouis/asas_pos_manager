@@ -104,7 +104,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request): Redirector|RedirectResponse|Application
     {
         $this->action->create($request);
-        return redirect(route('product.index'));
+        return redirect(route('product.create'));
     }
 
     /**
@@ -121,9 +121,16 @@ class ProductController extends Controller
         $taxRateTypes = TaxRateType::asSelectArray();
         $taxableMethodTypes = TaxableMethodType::asSelectArray();
         $stock = $this->stockService->getThisStock($product->id);
+        $is_add = true;
+        //在庫データが無いときに他店で登録したデータを仮取得する。
         if($stock === null){
-            //在庫データが無いときに確定している税フラグ等を仮入力しておく為。
+            $stock = $this->stockService->getOtherStock($product->id);
+            $is_add = false;
+        }
+        //未登録時に税フラグ等を仮入力しておく為。
+        if($stock === null){
             $stock = $this->stockService->getKariStock();
+            $is_add = false;
         }
         return view('product.edit', [
             'product' => $product,
@@ -133,6 +140,7 @@ class ProductController extends Controller
             'taxRateTypes' => $taxRateTypes,
             'taxableMethodTypes' => $taxableMethodTypes,
             'stock' => $stock,
+            'is_add' => $is_add,
         ]);
     }
 
@@ -146,7 +154,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product): Redirector|RedirectResponse|Application
     {
         $this->action->update($product, $request);
-        return redirect(route('product.index'));
+        return redirect(route('product.create'));
     }
 
     /**

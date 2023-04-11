@@ -6,11 +6,10 @@ use App\Enums\TransactionType;
 use App\Http\Requests\ExitStockRequest;
 use App\Http\Requests\ExitStockSearchRequest;
 use App\Models\TransactionSlip;
-//2023
 use App\Models\TransactionLine;
-//2023
 use App\UseCases\TransactionActions;
 use App\UseCases\ProductActions;
+use App\UseCases\ShopConfigActions;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\App;
 
 class ExitStockController extends Controller
 {
@@ -39,23 +39,27 @@ class ExitStockController extends Controller
      */
     public function index()
     {
-        $fromDate = Date::now()->format(config('app.date_format'));
-        $toDate = Date::now()->format(config('app.date_format'));
-        $slips = $this->action->getByDate($fromDate, $toDate,TransactionType::EXIT_STOCK);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
+        $slips = $this->action->getByDate($trans_date, $trans_date,TransactionType::EXIT_STOCK);
         return view('exit_stock.index', [
             'slips' => $slips,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date' => $trans_date,
+            'to_date' => $trans_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
-    public function search(ExitStockRequest $request)
+    public function search(ExitStockSearchRequest $request)
     {
         $slips = $this->action->getByDate($request->from_date, $request->to_date,TransactionType::EXIT_STOCK);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('exit_stock.index', [
             'slips' => $slips,
             'from_date' => $request->from_date,
             'to_date' => $request->to_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -68,15 +72,16 @@ class ExitStockController extends Controller
     {
         $slip = new TransactionSlip();
         $slip->transaction_type_id = TransactionType::EXIT_STOCK;
-        //2023
         $line = new TransactionLine();
         $products = $this->productAction->getAll();
-        //2023
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('exit_stock.create', [
             'transaction_type_id' => TransactionType::EXIT_STOCK,
             'slip' => $slip,
             'line' => $line,
-            'products' => $products //2023-3-9
+            'products' => $products,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -89,16 +94,14 @@ class ExitStockController extends Controller
     public function store(ExitStockRequest $request)
     {
         $this->action->create_exit($request);
-        
-        //return redirect(route('sale.create'));
-
-        $fromDate = Date::now()->format(config('app.date_format'));
-        $toDate = Date::now()->format(config('app.date_format'));
-        $slips = $this->action->getByDate($fromDate, $toDate,TransactionType::EXIT_STOCK);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
+        $slips = $this->action->getByDate($trans_date, $trans_date,TransactionType::EXIT_STOCK);
         return view('exit_stock.index', [
             'slips' => $slips,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date' => $trans_date,
+            'to_date' => $trans_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -111,9 +114,12 @@ class ExitStockController extends Controller
     public function edit(TransactionSlip $slip)
     {
         $products = $this->productAction->getAll();
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('exit_stock.edit', [
             'slip' => $slip,
-            'products' => $products
+            'products' => $products,
+            'trans_date' => $trans_date,
         ]);
     }
 

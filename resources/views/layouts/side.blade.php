@@ -18,12 +18,24 @@
                     入庫処理</a>
                 <a class="block p-3" href="{{ route('exit_stock.create') }}">
                     出庫処理</a>
+                <a class="block p-3" href="{{ route('entry_money.create') }}">
+                    入金処理</a>
                 <a class="block p-3" href="{{ route('exit_money.create') }}">
                     出金処理</a>
-                <a class="block p-3" href="">
-                    入金処理</a>
-                <a class="block p-3" href="">
+                <a class="block p-3" href="{{ route('daily_renewal.index') }}">
                     日次更新</a>
+            </div>
+        </div>
+        <div class="tab w-full overflow-hidden shadow-md">
+            <input class="absolute opacity-0" id="tab3" type="checkbox" name="tabs" checked>
+            <label class="block p-3 text-gray-100 cursor-pointer flex justify-between" for="tab3">
+                帳票
+                <a class="up-icon w-4 h-4 mt-1">
+                <a class="down-icon w-4 h-4 mt-1">
+            </label>
+            <div class="tab-content overflow-hidden">
+                <a class="block p-3" href="{{ route('report.index') }}">
+                    帳票出力</a>
             </div>
         </div>
         <div class="tab w-full overflow-hidden shadow-md">
@@ -34,9 +46,9 @@
                 <a class="down-icon w-4 h-4 mt-1">
             </label>
             <div class="tab-content overflow-hidden">
-                <a class="block p-3" href="{{ route('product.index') }}">
+                <a class="block p-3" href="{{ route('product.create') }}">
                     商品</a>
-                <a class="block p-3" href="{{ route('customer.index') }}">
+                <a class="block p-3" href="{{ route('customer.create') }}">
                     顧客</a>
                 <a class="block p-3" href="{{ route('category.index') }}">
                     カテゴリー</a>
@@ -55,7 +67,7 @@
             </div>
         </div>
         <div class="tab w-full overflow-hidden shadow-md">
-            <input class="absolute opacity-0" id="tab2" type="checkbox" name="tabs" >
+            <input class="absolute opacity-0" id="tab2" type="checkbox" name="tabs" checked>
             <label class="block p-3 text-gray-100 cursor-pointer flex justify-between" for="tab2">
                 店舗マスター
                 <a class="up-icon w-4 h-4 mt-1">
@@ -71,16 +83,16 @@
             </div>
         </div>
         <div class="tab w-full overflow-hidden shadow-md">
-            <input class="absolute opacity-0" id="tab4" type="checkbox" name="tabs" >
+            <input class="absolute opacity-0" id="tab4" type="checkbox" name="tabs" checked>
             <label class="block p-3 text-gray-100 cursor-pointer flex justify-between" for="tab4">
                 棚卸業務
                 <a class="up-icon w-4 h-4 mt-1">
                 <a class="down-icon w-4 h-4 mt-1">
             </label>
             <div class="tab-content overflow-hidden">
-                <a class="block p-3" href="">
+                <a class="block p-3" href="{{ route('stock_taking.select') }}">
                     棚卸数登録一覧</a>
-                <a class="block p-3" href="">
+                <a class="block p-3" href="{{ route('stock_taking.index') }}">
                     棚卸数登録</a>
                 <a class="block p-3" href="">
                     棚卸数データ取込</a>
@@ -89,7 +101,7 @@
             </div>
         </div>
         <div class="tab w-full overflow-hidden shadow-md mb-20">
-            <input class="absolute opacity-0" id="tab5" type="checkbox" name="tabs">
+            <input class="absolute opacity-0" id="tab5" type="checkbox" name="tabs" checked>
             <label class="block p-3 text-gray-100 cursor-pointer flex justify-between" for="tab5">
                 設定
                 <a class="up-icon w-4 h-4 mt-1">

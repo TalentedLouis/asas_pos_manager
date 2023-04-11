@@ -3,6 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Enums\TransactionType;
+use App\Enums\TaxRateType;
+use App\Enums\TaxableMethodType;
+
 use App\Models\Customer;
 use App\Models\EntryExitTarget;
 use App\Models\TransactionLine;
@@ -13,6 +16,7 @@ use App\Services\TaxService;
 use App\Services\CustomerService;
 use App\Services\SupplierTargetService;
 use App\Services\EntryExitTargetService;
+use App\Services\ConfigRegiService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
@@ -54,7 +58,9 @@ class Transactions extends Component
             $exclude_tax, 
             $ctax_rate, 
             $subtotal_tax_included, 
-            $subtotal_tax_excluded;
+            $subtotal_tax_excluded,
+            $category_id, //add 20230406
+            $genre_id;    //add 20230406
 
     public $lines = [];
     public $index = 0;
@@ -93,7 +99,7 @@ class Transactions extends Component
         } elseif ($this->transaction_type_id == TransactionType::ENTRY_MONEY) {
             $this->add_money();
         } else {
-            $this->transactionAdd(5);
+            $this->transactionAdd(40);
         }
         $this->message = '良かった';
     }
@@ -111,8 +117,20 @@ class Transactions extends Component
 
     public function add_money()
     {
-            $this->lines[0] = new TransactionLine();
-            $this->product_code[0] = '9999999999918';
+        $configRegiService = App::make(ConfigRegiService::class);
+        $this->lines[0] = new TransactionLine();
+        $target_code = $configRegiService->getEntryExitMoneyCode();
+        $this->product_code[0] = $target_code;
+        $productService = App::make(ProductService::class);
+        $p_data = $productService->getByCode($target_code);
+        $this->product_id[0] = $p_data->id;
+        $this->product_name[0] = $p_data->name;
+        $this->avg_stocking_price[0] = $p_data->avg_stocking_price;
+        $this->this_stock_quantity[0] = $p_data->this_stock_quantity;
+        $this->quantity[0] = 1;
+        $this->tax_rate_type_id[0] = TaxRateType::INCLUDED;
+        $this->taxable_method_type_id[0] = TaxableMethodType::NONE_TAX;
+        $index = 0;
     }
 
     public function del($k)
@@ -163,6 +181,7 @@ class Transactions extends Component
 
     public function changeProduct($index, $value, ProductService $productService, StockService $stockService, TaxService $taxService)
     {
+        $this->test_message = null;
         $data = $this->product_code;
         $data[$index] = $value;
         
@@ -170,18 +189,20 @@ class Transactions extends Component
         $this->slip->transaction_type_id = $this->transaction_type_id;
 
         if ($value !== '') {
-            $this->test_message = $index;
+            //$this->test_message = $index;
             $p_data = $productService->getByCode($value);
             if ($p_data !== null){
                 $this->product_name[$index] = $p_data->name;
                 $this->product_id[$index] = $p_data->id;
+                $this->category_id[$index] = $p_data->category_id; //add 20230406
+                $this->genre_id[$index] = $p_data->genre_id; //add 20230406
                 $stock = null;
                 $stock = $stockService->getThisStock($p_data->id);
                 if ($stock !== null) {
                     $this->avg_stocking_price[$index] = $stock->avg_stocking_price;
                     $this->this_stock_quantity[$index] = $stock->this_stock_quantity;
                     if (array_key_exists($index, $this->unit_price) === false) {
-                        $this->test_message = 'test1';
+                        //$this->test_message = 'test1';
                         $this->quantity[$index] = 1;
                         if ($this->transaction_type_id == TransactionType::SALES) {
                             $this->unit_price[$index] = (integer)$stock->sell_price;
@@ -194,7 +215,7 @@ class Transactions extends Component
                         }
                     } else {
                         if (isset($this->unit_price[$index]) === false) {
-                            $this->test_message = 'test4';
+                            //$this->test_message = 'test4';
                         }
                         if ($this->quantity[$index] > 0){
                             //$this->test_message = 'test2';
@@ -224,7 +245,9 @@ class Transactions extends Component
                     }     
                 } 
                 else {
-                    $this->test_message = '商品の在庫データがみつかりません。商品登録して下さい。';
+                    $this->test_message = strval((int)$index + 1).'行目の商品の在庫データがみつかりません。商品登録して下さい。';
+                    $this->category_id[$index] = ''; //add 20230406
+                    $this->genre_id[$index] = ''; //add 20230406
                     $this->product_name[$index] = '';
                     $this->quantity[$index] = '';
                     $this->avg_stocking_price[$index] = '';
@@ -242,6 +265,8 @@ class Transactions extends Component
                     $this->subtotal_tax_excluded[$index] = '';
                 }
             } else {
+                $this->category_id[$index] = ''; //add 20230406
+                $this->genre_id[$index] = ''; //add 20230406
                 $this->product_name[$index] = '';
                 $this->quantity[$index] = '';
                 $this->avg_stocking_price[$index] = '';
@@ -257,7 +282,7 @@ class Transactions extends Component
                 $this->ctax_rate[$index] = '';
                 $this->subtotal_tax_included[$index] = '';
                 $this->subtotal_tax_excluded[$index] = '';
-                $this->test_message = '商品がみつかりません。商品登録お願い致します。';
+                $this->test_message = strval((int)$index + 1).'行目の商品がみつかりません。商品登録お願い致します。';
             }
                                 
             if (is_numeric($this->unit_price[$index]) && is_numeric($this->quantity[$index])) {
@@ -297,7 +322,6 @@ class Transactions extends Component
                 $this->subtotal_tax_included[$index] = $this->final_unit_price_tax_included[$index] * $this->quantity[$index];
                 $this->subtotal_tax_excluded[$index] = $this->final_unit_price_tax_excluded[$index] * $this->quantity[$index];
             }
-
             if(isset($this->quantity[$index]) && is_numeric($this->quantity[$index]))
                 $this->total_quantity += $this->quantity[$index];
             if(isset($this->subtotal_tax_included[$index]) && is_numeric($this->subtotal_tax_included[$index]))

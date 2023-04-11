@@ -63,6 +63,8 @@ class UpdateTransactions extends Component
         'transaction_lines.*.product_id' => '',
         'transaction_lines.*.product_code' => '',
         'transaction_lines.*.product_name' => '',
+        'transaction_lines.*.category_id' => '',
+        'transaction_lines.*.genre_id' => '',
         'transaction_lines.*.note' => '',
         'transaction_lines.*.quantity' => '',
         'transaction_lines.*.unit_price' => '',
@@ -136,7 +138,7 @@ class UpdateTransactions extends Component
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::ENTRY_STOCK) {
                 $target = $entryExitTargetService->getByCode($value);
             } elseif ($this->transaction_slip->transaction_type_id === TransactionType::EXIT_MONEY 
-                         or $this->transaction_slip->transaction_type_id === TransactionType::EXIT_MONEY) {
+                         or $this->transaction_slip->transaction_type_id === TransactionType::ENTRY_MONEY) {
                 $this->transaction_slip->customer_id = null;
                 $this->transaction_slip->supplier_target_id = null;
                 $this->transaction_slip->entry_exit_target_id = null;
@@ -179,14 +181,16 @@ class UpdateTransactions extends Component
         $stockService = App::make(StockService::class);
         if ($value !== '') {
             $product = $productService->getByCode($value);
-            //$product = Product::where('code', '=', $value)->first();
+//            $product = Product::where('code', '=', $value)->first();
             $stock = null;
             if ($product !== null) {
                 $this->transaction_lines[$index]->product_id = $product->id;
                 $this->transaction_lines[$index]->product_name = $product->name;
                 $this->transaction_lines[$index]->product_code = $product->code;
+                $this->transaction_lines[$index]->category_id = $product->category_id;
+                $this->transaction_lines[$index]->genre_id = $product->genre_id;
                 $stock = $stockService->getThisStock($product->id);
-                //$stock = Stock::where('product_id', '=', $product->id)->where('shop_id', '=', Auth::user()->shop->id)->first();
+//                $stock = Stock::where('product_id', '=', $product->id)->where('shop_id', '=', Auth::user()->shop->id)->first();
                 //2023add s
                 if (!is_numeric($this->transaction_lines[$index]->quantity)){
                     $this->test_message = 'test';
@@ -198,6 +202,8 @@ class UpdateTransactions extends Component
                 //2023upd
                 $this->transaction_lines[$index]->product_id = null;
                 $this->transaction_lines[$index]->product_name = null;
+                $this->transaction_lines[$index]->category_id = null;
+                $this->transaction_lines[$index]->genre_id = null;
                 $this->transaction_lines[$index]->avg_stocking_price = null;
                 $this->transaction_lines[$index]->this_stock_quantity = null;
                 $this->transaction_lines[$index]->unit_price = null;

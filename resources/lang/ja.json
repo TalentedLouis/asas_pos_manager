@@ -727,5 +727,13 @@
     "Zimbabwe": "ジンバブエ",
     "Zip \/ Postal Code": "郵便番号",
     "Åland Islands": "Åland Islands",
-    "shopcode": "店コード"
+    "shopcode": "店コード",
+    "Group sale purchase": "グループ別売上仕入金額表",
+    "Daily month result": "日報・月報",
+    "Product sale": "商品別売上金額表",
+    "Time sale": "時間帯別売上金額表",
+    "Sale mei": "売上明細リスト",
+    "Purchase mei": "仕入明細リスト",
+    "Entry exit mei": "入出庫明細リスト",
+    "Product stock money": "商品別在庫金額表"
 }

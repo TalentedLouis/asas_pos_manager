@@ -14,6 +14,12 @@ interface ProductRepositoryInterface
     public function get(int $id): ?Product;
 
     /**
+     * @param 
+     * @return Product|null
+     */
+    public function newKariEntity(): ?Product;
+
+    /**
      * @param string $code
      * @return Product|null
      */

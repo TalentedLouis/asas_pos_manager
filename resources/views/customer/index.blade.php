@@ -1,26 +1,28 @@
 <x-base-layout>
     <x-slot name="title">顧客一覧</x-slot>
     <x-slot name="slot">
-        <div class="flex flex-wrap border-b-2 w-full sm:w-12/12 lg:w-12/12">
+        <div class="flex flex-wrap border-b-2 w-full sm:w-full lg:w-full">
             <div class="px-3 mb-6 w-2/16 sm:w-2/16 lg:w-2/16">
-                            <x-label for="product_search_type" class="w-10/12 sm:w-10/12 lg:w-10/12" value="　" />
-                            <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                    href="{{ route('customer.create') }}">顧客追加(F1)</a>
+                <x-label for="product_search_type" class="w-10/12 sm:w-10/12 lg:w-10/12" value="　" />
+                <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+                        href="{{ route('customer.create') }}">顧客追加(F1)</a>
             </div>
-            <div class="px-3 mb-6 w-3/16 sm:w-3/16 lg:w-3/16">
+            <div class="px-3 mb-6 w-8/16 sm:w-8/16 lg:w-8/16">
                 <form id="form2"
                         class="w-full mb-3"
                         action="{{ route('customer.code_search') }}"
                         method="post">
                     @csrf
-                    <div class="px-1 mb-1 w-full sm:w-2/2 lg:w-2/2">
+                    <div class="px-1 mb-1 w-full sm:w-full lg:w-full">
                         <x-label for="keyword" value="顧客コードで検索する" />
-                        <x-input id="keyword" type="number" name="keyword" class="w-2/3" :value="old('keyword')" required autofocus />
+                        <x-input id="keyword" type="number" name="keyword" class="w-4/16" 
+                                onKeydown="if (event.keyCode == 13) F5_Click()"
+                                :value="old('keyword')" required autofocus />
                         <x-button id="F5" type="submit" class="px-6 py-3 bg-blue-500">検索(F5)</x-button>
                     </div>
                 </form>
             </div>
-            <div class="px-3 mb-6 w-11/16 sm:w-11/16 lg:w-11/16">
+            <div class="px-3 mb-6 w-5/16 sm:w-5/16 lg:w-5/16">
                 <form id="form2"
                         class="w-full mb-3"
                         action="{{ route('customer.name_search') }}"
@@ -69,3 +71,8 @@
         {{ $customers->links() }}
     </x-slot>
 </x-base-layout>
+<script type="text/javascript">
+    function F5_Click(){
+        document.getElementById("F5").click();
+    }
+</script>

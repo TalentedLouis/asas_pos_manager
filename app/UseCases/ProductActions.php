@@ -3,6 +3,7 @@
 namespace App\UseCases;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\StockTakingRequest;
 use App\Models\Product;
 use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\StockRepositoryInterface;
@@ -37,6 +38,11 @@ class ProductActions
         return $this->productRepository->get($id);
     }
 
+    public function getKariProduct(): ?Product
+    {
+        return $this->productRepository->newKariEntity();
+    }
+
     /**
      * @return LengthAwarePaginator
      */
@@ -50,7 +56,7 @@ class ProductActions
      */
     public function findByName(string $name): LengthAwarePaginator
     {
-        return $this->productRepository->findByName($name);
+        return $this->reportRepository->findByName($name);
     }
 
 
@@ -112,6 +118,26 @@ class ProductActions
         $stock->stocking_taxable_method_type_id = $post->stocking_taxable_method_type_id;
         $this->stockRepository->save($stock);
         return true;
+    }
+
+    /**
+     * @param Product $entity
+     * @param ProductRequest $post
+     * @return bool
+     */
+    public function update_stock_taking(Product $entity, StockTakingRequest $post): bool
+    {
+        $stock = $this->stockRepository->getOne($entity->id);
+        if (is_null($stock)) {
+            return true;
+        }else{
+            $stock->rack_code = $post->rack_code;
+            $stock->stocktaking_quantity = $post->stocktaking_quantity;
+            $stock->is_stocktaking = 1;
+            $this->stockRepository->save($stock);
+            return true;
+        }
+
     }
 
     public function delete(Product $entity): ?bool

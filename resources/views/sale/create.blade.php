@@ -1,5 +1,5 @@
 <x-base-layout>
-    <x-slot name="title">売上登録</x-slot>
+    <x-slot name="title">売上登録　　　　　処理日付：{{ $trans_date }}</x-slot>
     <x-slot name="slot">
         <div class="w-full">
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
@@ -28,7 +28,7 @@
                                 <x-button  type="button" class="px-4 py-0 bg-gray-600 text-sm">　　　　　　<br>(F3)</x-button>
                             </div>
                             <div class="px-1 mt-2 mb-2 w-1/13 flex items-center">
-                                <x-button  type="button" class="px-4 py-0 bg-gray-600 text-sm">　　　　　　<br>(F4)</x-button>
+                                <x-button id="F4" type="button" class="px-4 py-0 bg-blue-500 text-sm" onclick="addProduct()">　10行追加　<br>(F4)</x-button>
                             </div>
                             <div class="px-4 mt-2 mb-2 w-1/16 flex items-center">
                             </div>    
@@ -69,6 +69,11 @@
                 e.preventDefault();
                 document.form1.submit();
             });
+
+            function addProduct(){
+                console.log('-- add product ---');
+                Livewire.emit('transactionAdd', 10);
+            }
         </script>
     </x-slot>
 </x-base-layout>

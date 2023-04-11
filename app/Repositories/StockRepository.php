@@ -20,7 +20,7 @@ class StockRepository implements StockRepositoryInterface
     public function newKariEntity(): Stock
     {
         $entity = new Stock();
-        $entity->sell_tax_rate_type_id = TaxRateType::EXCLUDED;
+        $entity->sell_tax_rate_type_id = TaxRateType::INCLUDED;
         $entity->sell_taxable_method_type_id = TaxableMethodType::STANDARD_TAX;
         $entity->stocking_tax_rate_type_id = TaxRateType::EXCLUDED;
         $entity->stocking_taxable_method_type_id = TaxableMethodType::STANDARD_TAX;
@@ -36,6 +36,16 @@ class StockRepository implements StockRepositoryInterface
     {
         $result = Stock::where('product_id', $productId)
             ->where('shop_id', Auth::user()->shop->id)
+            ->get();
+        if (count($result) == 0) {
+            return null;
+        }
+        return $result[0];
+    }
+
+    public function getOtherOne(int $productId): ?Stock
+    {
+        $result = Stock::where('product_id', $productId)
             ->get();
         if (count($result) == 0) {
             return null;
@@ -81,6 +91,8 @@ class StockRepository implements StockRepositoryInterface
                     // 在庫数
                     $stock->this_stock_quantity = (int)$stock->this_stock_quantity - (int)$line->quantity;
                 }
+            } else {
+                return true;        
             }
             $this->save($stock);
         }

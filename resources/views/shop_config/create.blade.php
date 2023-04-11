@@ -10,6 +10,12 @@
                 @csrf
                 <div class="flex flex-wrap">
                     <div class="px-2 mb-4 w-1/4 sm:w-1/4 lg:w-1/4">
+                        <x-label for="trans_date" class="w-full" value="処理日付"></x-label>
+                        <x-input id="trans_date" class="w-full" type="date" name="trans_date" :value="old('trans_date')" required></x-input>
+                    </div>
+                </div>
+                <div class="flex flex-wrap">
+                    <div class="px-2 mb-4 w-1/4 sm:w-1/4 lg:w-1/4">
                         <x-label for="delay_minutes" class="w-full" value="延長時間(分)"></x-label>
                         <x-input id="delay_minutes" class="w-full" type="text" name="delay_minutes" :value="old('delay_minutes')" required></x-input>
                     </div>

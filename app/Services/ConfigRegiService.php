@@ -25,4 +25,10 @@ class ConfigRegiService
         $this->repository->save($entity);
         return $entity->product_code_sequence;
     }
+
+    public function getEntryExitMoneyCode(): string
+    {
+        $entity = $this->repository->getOne();
+        return $entity->entry_exit_money_code;
+    }
 }

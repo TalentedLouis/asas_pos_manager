@@ -15,8 +15,10 @@
                 <div class="px-3 mb-6 w-11/16 sm:w-11/16 lg:w-11/16">
                     <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
                         <x-label for="product_search_type" class="w-5/12 sm:w-5/12 lg:w-5/12" value="商品名検索" />
-                        <x-input id="keyword" type="text" name="keyword" class="w-5/12 sm:w-5/12 lg:w-5/12" :value="old('keyword')" autofocus />
-                        <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">検索(F9)</x-button>
+                        <x-input id="keyword" type="text" name="keyword" class="w-5/12 sm:w-5/12 lg:w-5/12" 
+                                onKeydown="if (event.keyCode == 13) F5_Click()"
+                                :value="old('keyword')" autofocus />
+                        <x-button id="F5" type="submit" class="px-6 py-3 bg-blue-500">検索(F5)</x-button>
                         <a id="F12" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
                                     href="{{ route('product.index') }}">クリア(F12)</a>
                     </div>
@@ -67,3 +69,8 @@
         {{ $products->links() }}
     </x-slot>
 </x-base-layout>
+<script type="text/javascript">
+    function F5_Click(){
+        document.getElementById("F5").click();
+    }
+</script>

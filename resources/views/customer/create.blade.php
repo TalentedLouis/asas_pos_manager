@@ -10,7 +10,9 @@
                 <div class="flex flex-wrap border-b-2">
                     <div class="px-1 mb-1 w-full sm:w-1/2 lg:w-1/3">
                         <x-label for="keyword" value="顧客コードで検索する" />
-                        <x-input id="keyword" type="number" name="keyword" class="w-2/3" :value="old('keyword')" required autofocus />
+                        <x-input id="keyword" type="number" name="keyword" class="w-2/3" :value="old('keyword')" 
+                                onKeydown="if (event.keyCode == 13) F5_Click()"
+                                required autofocus />
                         <x-button id="F5" type="submit" class="px-6 py-3 bg-blue-500">検索(F5)</x-button>
                     </div>
                 </div>
@@ -85,7 +87,7 @@
 
                     <div class="flex items-center justify-center px-1 mb-1">
                         <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                        href="{{ route('customer.index') }}">戻る(F1)</a>
+                        href="{{ route('customer.index') }}">顧客一覧(F1)</a>
                         <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">追加する(F9)</x-button>
                     </div>
                 </div>
@@ -93,3 +95,8 @@
         </div>
     </x-slot>
 </x-base-layout>
+<script type="text/javascript">
+    function F5_Click(){
+        document.getElementById("F5").click();
+    }
+</script>

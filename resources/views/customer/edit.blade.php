@@ -96,7 +96,7 @@
                     
                     <div class="flex items-center justify-center px-1 mb-1">
                         <a id="F1" class="mr-3 inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-                        href="{{ route('customer.index') }}">戻る(F1)</a>
+                        href="{{ route('customer.index') }}">顧客一覧(F1)</a>
                         <x-button id="F9" type="submit" class="px-6 py-3 bg-blue-500">更新する(F9)</x-button>
                     </div>
                 </div>

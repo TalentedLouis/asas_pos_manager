@@ -1,5 +1,5 @@
 <x-base-layout>
-    <x-slot name="title">売上一覧</x-slot>
+    <x-slot name="title">売上一覧　　　　　処理日付：{{ $trans_date }}</x-slot>
     <x-slot name="slot">
         <div class="w-full mb-3">
             <div class="flex flex-wrap">
@@ -13,7 +13,7 @@
                         <x-label class="w-full" value="期間"></x-label>
                         <x-input id="from_date" class="inline-flex" type="date" name="from_date" :value="old('from_date', $from_date)"></x-input> 〜
                         <x-input id="to_date" class="inline-flex" type="date" name="to_date" :value="old('to_date', $to_date)"></x-input>
-                        <x-button type="submit" class="px-6 py-3 bg-gray-600">検索</x-button>
+                        <x-button id="F5" type="submit" class="px-6 py-3 bg-gray-600">検索(F5)</x-button>
                     </form>
                     @error('from_date')
                     <div class="w-full"><div class="text-red-500">{{ $message }}</div></div>

@@ -40,6 +40,7 @@ class ConfigRegiActions
     public function update(ConfigRegi $entity, ConfigRegiRequest $post): bool
     {
         $entity->product_code_suffix = $post->product_code_suffix;
+        $entity->entry_exit_money_code = $post->entry_exit_money_code;
         return $this->repository->save($entity);
     }
 }

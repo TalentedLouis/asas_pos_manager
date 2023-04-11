@@ -4,7 +4,7 @@
         {{-- 担当者 --}}
         <div class="px-3 mb-3 w-2/12 sm:w-2/12 lg:w-2/12">
             <x-label for="staff_id" class="w-full" value="担当者No."></x-label>
-            <x-input id="staff_id" class="text-sm w-1/3 mr-2" type="text" name="staff_id"
+            <x-input id="staff_id" class="text-sm w-1/3 mr-2" type="number" name="staff_id"
                      wire:model.lazy="transaction_slip.staff_id"
                      wire:change="$emit('changeStaff', $event.target.value)"
                      required autofocus></x-input>
@@ -19,7 +19,7 @@
             @case(1)
                 <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">
                     <x-label for="customer_code" class="w-full" value="会員No."></x-label>
-                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="number" name="target_code"
                             wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
@@ -31,7 +31,7 @@
             @case(2)
                 <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">      
                     <x-label for="supplier_target_id" class="w-full" value="仕入先No."></x-label>
-                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="number" name="target_code"
                             wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
@@ -43,7 +43,7 @@
             @case(3)
                 <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">
                     <x-label for="entry_exit_target_id" class="w-full" value="出庫先No."></x-label>
-                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="number" name="target_code"
                             wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
@@ -56,7 +56,7 @@
             @case(4)
                 <div class="px-3 mb-3 w-3/12 sm:w-3/12 lg:w-3/12">
                     <x-label for="entry_exit_target_id" class="w-full" value="出庫先No."></x-label>
-                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="text" name="target_code"
+                    <x-input id="target_code" class="text-sm w-1/3 mr-2" type="number" name="target_code"
                             wire:model.lazy="transaction_slip.target_code"
                             wire:change="$emit('changeTarget', $event.target.value)"
                             required></x-input>
@@ -66,23 +66,22 @@
                     <x-input wire:model.lazy="transaction_slip.target_name" class="text-sm w-1/2 mr-2  bg-gray-100" type="text" disabled></x-input>
                 </div>    
             @break
-                <div class="px-3 mb-3 w-1/12 sm:w-1/12 lg:w-1/12">
-                    <x-label for="entry_exit_target_id" class="w-full" value="出庫先No."></x-label>
-                </div> 
             @default
                 
         @endswitch
         
+        {{-- ヘッダー合計 --}}
         @if($transaction_slip->transaction_type_id === 5 or $transaction_slip->transaction_type_id === 6)
-            {{-- ヘッダー合計 --}}
-            <div class="px-3 mb-3 w-7/12 sm:w-7/12 lg:w-7/12 text-left">
-                <div class="px-3 mb-3 w-8/12 sm:w-8/12 lg:w-8/12 text-left">
-                    {{-- 税込み合計金額 --}}
-                    <x-label class="w-full text-right" value="合計金額"></x-label>
-                    <x-input id="supplier_target_id" wire:model.lazy="transaction_slip.total_amount_ctax_included" class="w-full text-right text-lg font-bold" type="text" disabled></x-input>
-                </div>
+        {{-- 入出金の場合 --}}
+            <div class="px-3 mb-3 w-1/12 sm:w-1/12 lg:w-1/12">
+            </div>
+            <div class="px-3 mb-3 w-1/12 sm:w-1/12 lg:w-1/12">
+                {{-- 税込み合計金額 --}}
+                <x-label class="w-full text-right" value="金額"></x-label>
+                <x-input id="supplier_target_id" wire:model.lazy="transaction_slip.total_amount_ctax_included" class="w-full text-right text-lg font-bold" type="text" disabled></x-input>
             </div>
         @else
+        {{-- 入出金以外の場合 --}}
             <div class="px-3 mb-3 w-1/12 sm:w-1/12 lg:w-1/12">
                 {{-- 合計数量 --}}
                 <x-label class="w-full text-right" value="合計数量"></x-label>
@@ -102,8 +101,13 @@
     <div class="w-full text-red-600 text-sm">
         {{ $line_message }}
     </div>
+
+    {{-- 明細 --}}
+    <div class="w-full text-red-600 text-sm">
+        {{ $test_message }}
+    </div>
     @if($transaction_slip->transaction_type_id === 5 or $transaction_slip->transaction_type_id === 6)
-        {{-- 入出金の場合 --}}
+    {{-- 入出金の場合 --}}
         <div class="flex flex-wrap">
             <div class="px-3 mb-1 w-3/12">
                 <x-label class="w-full" value="内容"></x-label>
@@ -117,19 +121,22 @@
             <div class="flex flex-wrap" wire:key="transaction_line-{{ $index }}">
                 <div class="px-1 mb-2 w-3/12">
                     {{-- 備考 --}}
-                    <x-input class="w-full text-sm" type="text" wire:model.lazy="transaction_lines.{{ $index }}.note" 
+                    <x-input id="note-{{ $index }}" class="w-full text-sm" type="text" wire:model.lazy="transaction_lines.{{ $index }}.note" 
                              name="lines[{{ $index }}][note]"></x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 単価 --}}
-                    <x-input class="w-full text-right text-sm" type="text"
+                    <x-input id="unit-price-{{ $index }}" class="w-full text-right text-sm" type="number"
                             wire:model.lazy="transaction_lines.{{ $index }}.unit_price"
                             wire:change="$emit('changeUnitPrice', {{ $index }}, $event.target.value)"
                             value="{{ number_format($transaction_line->unit_price) }}"
-                            name="lines[{{ $index }}][unit_price]" onchange="totalCalc()"></x-input>
+                            name="lines[{{ $index }}][unit_price]" onchange="totalCalc()"
+                            onKeydown="if (event.keyCode == 13) moveCursorToNote(event, {{$index}})"></x-input>
                 </div>
                 <x-input name="lines[{{ $index }}][product_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_id" />
                 <x-input name="lines[{{ $index }}][product_code]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_code" />
+                <x-input name="lines[{{ $index }}][category_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.category_id" />
+                <x-input name="lines[{{ $index }}][genre_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.genre_id" />
                 <x-input name="lines[{{ $index }}][product_name]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_name" />
                 <x-input name="lines[{{ $index }}][quantity]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.quantity" />
                 <x-input name="lines[{{ $index }}][avg_stocking_price]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.avg_stocking_price" />
@@ -147,6 +154,7 @@
             </div>
         @endforeach
     @else
+    {{-- 入出金以外の場合 --}}
         <div class="flex flex-wrap">
             <div class="px-3 mb-1 w-1/12">
                 <x-label class="w-full" value="商品コード"></x-label>
@@ -178,7 +186,7 @@
             <div class="flex flex-wrap" wire:key="transaction_line-{{ $index }}">
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 商品コード --}}
-                    <x-input class="w-full text-sm" type="text"
+                    <x-input class="w-full text-sm" type="number"
                         wire:model.lazy="transaction_lines.{{ $index }}.product_code"
                         wire:change.lazy="$emit('changeProduct', {{ $index }}, $event.target.value)" 
                         value="{{ $transaction_line->product_code }}"
@@ -196,7 +204,7 @@
                     {{-- 数量 --}}
                     <x-input 
                         id="quantity-{{ $index }}"
-                        type="text"
+                        type="number"
                         class="row_quantity w-full text-right text-sm font-bold" 
                         wire:model.lazy="transaction_lines.{{ $index }}.quantity"
                         wire:change="$emit('changeQuantity', {{ $index }}, $event.target.value)"
@@ -211,7 +219,7 @@
                     <x-input 
                         id="unit-price-{{ $index }}"
                         class="w-full text-right text-sm" 
-                        type="text"
+                        type="number"
                         wire:model.lazy="transaction_lines.{{ $index }}.unit_price"
                         wire:change="$emit('changeUnitPrice', {{ $index }}, $event.target.value)"
                         value="{{ number_format($transaction_line->unit_price) }}"
@@ -247,25 +255,25 @@
                         </div>
                         <div class="w-full px-0.5 text-xs">
                             {{-- 税額 --}}
-                            <input type="text" class="p-0 m-0 text-xs w-full bg-gray-100 border-gray-100"
+                            <input type="number" class="p-0 m-0 text-xs w-full bg-gray-100 border-gray-100"
                                 wire:model.lazy="transaction_lines.{{ $index }}.ctax_price" disabled />
                         </div>
                     </div>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 小計 --}}
-                    <x-input class="row_subtotal w-full text-right text-sm" type="text"
+                    <x-input class="row_subtotal w-full text-right text-sm" type="number"
                             wire:model.lazy="transaction_lines.{{ $index }}.subtotal_tax_included" disabled
                             name="lines[{{ $index }}][subtotal_tax_included]"></x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 平均原価 --}}
-                    <x-input class="w-full text-right text-sm bg-gray-100" type="text"
+                    <x-input class="w-full text-right text-sm bg-gray-100" type="number"
                             wire:model.lazy="transaction_lines.{{ $index }}.avg_stocking_price" disabled></x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/12">
                     {{-- 在庫数 --}}
-                    <x-input class="w-full text-right text-sm bg-gray-100" type="text"
+                    <x-input class="w-full text-right text-sm bg-gray-100" type="number"
                             wire:model.lazy="transaction_lines.{{ $index }}.this_stock_quantity" disabled></x-input>
                 </div>
                 <div class="px-1 mb-2 w-1/24">
@@ -292,6 +300,8 @@
                     </x-button>
                 </div>
                 <x-input name="lines[{{ $index }}][product_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_id" />
+                <x-input name="lines[{{ $index }}][category_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.category_id" />
+                <x-input name="lines[{{ $index }}][genre_id]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.genre_id" />
                 <x-input name="lines[{{ $index }}][product_name]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.product_name" />
                 <x-input name="lines[{{ $index }}][avg_stocking_price]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.avg_stocking_price" />
                 <x-input name="lines[{{ $index }}][this_stock_quantity]" type="hidden" wire:model.lazy="transaction_lines.{{ $index }}.this_stock_quantity" />
@@ -308,10 +318,6 @@
             </div>
         @endforeach
     @endif
-    {{-- 2023 ADD S --}}
-    <div class="w-full text-red-600 text-sm">
-        {{ $test_message }}
-    </div>
 </div>
 
 <script type="text/javascript">
@@ -345,6 +351,12 @@
     }
     function moveCursorToDel(e, id){
         let nextElement = document.getElementById('del-' + id);
+        if (nextElement) nextElement.focus();
+        
+        e.preventDefault();
+    }
+    function moveCursorToNote(e, id){
+        let nextElement = document.getElementById('note-' + id);
         if (nextElement) nextElement.focus();
         
         e.preventDefault();

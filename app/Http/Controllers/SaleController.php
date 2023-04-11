@@ -6,12 +6,10 @@ use App\Enums\TransactionType;
 use App\Http\Requests\SaleRequest;
 use App\Http\Requests\SaleSearchRequest;
 use App\Models\TransactionSlip;
-//2023
 use App\Models\TransactionLine;
-//2023
-//2023-03-09
 use App\UseCases\ProductActions;
 use App\UseCases\TransactionActions;
+use App\UseCases\ShopConfigActions;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\App;
 
 class SaleController extends Controller
 {
@@ -40,23 +39,28 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $fromDate = Date::now()->format(config('app.date_format'));
-        $toDate = Date::now()->format(config('app.date_format'));
-        $slips = $this->action->getByDate($fromDate, $toDate,TransactionType::SALES);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
+        //$fromDate = Date::now()->format(config('app.date_format'));
+        $slips = $this->action->getByDate($trans_date, $trans_date,TransactionType::SALES);
         return view('sale.index', [
             'slips' => $slips,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date' => $trans_date,
+            'to_date' => $trans_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
-    public function search(SaleRequest $request)
+    public function search(SaleSearchRequest $request)
     {
         $slips = $this->action->getByDate($request->from_date, $request->to_date,TransactionType::SALES);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('sale.index', [
             'slips' => $slips,
             'from_date' => $request->from_date,
             'to_date' => $request->to_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -69,17 +73,16 @@ class SaleController extends Controller
     {
         $slip = new TransactionSlip();
         $slip->transaction_type_id = TransactionType::SALES;
-        //2023
         $line = new TransactionLine();
         $products = $this->productAction->getAll();
-        //2023
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('sale.create', [
             'transaction_type_id' => TransactionType::SALES,
             'slip' => $slip,
-            //2023
             'line' => $line,
-            //2023
-            'products' => $products //2023-3-9
+            'products' => $products,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -92,16 +95,14 @@ class SaleController extends Controller
     public function store(SaleRequest $request)
     {
         $this->action->create_sale($request);
-        
-        //return redirect(route('sale.create'));
-
-        $fromDate = Date::now()->format(config('app.date_format'));
-        $toDate = Date::now()->format(config('app.date_format'));
-        $slips = $this->action->getByDate($fromDate, $toDate,TransactionType::SALES);
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
+        $slips = $this->action->getByDate($trans_date, $trans_date,TransactionType::SALES);
         return view('sale.index', [
             'slips' => $slips,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date' => $trans_date,
+            'to_date' => $trans_date,
+            'trans_date' => $trans_date,
         ]);
     }
 
@@ -114,9 +115,12 @@ class SaleController extends Controller
     public function edit(TransactionSlip $slip)
     {
         $products = $this->productAction->getAll();
+        $shopConfigAction = App::make(ShopConfigActions::class);
+        $trans_date = $shopConfigAction->get_trans_date();
         return view('sale.edit', [
             'slip' => $slip,
-            'products' => $products //2023-3-9
+            'products' => $products,
+            'trans_date' => $trans_date,
         ]);
     }
 
