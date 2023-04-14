@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::post('/report/search', [ReportController::class, 'search'])->name('report.search');
+    Route::get('/report/download_excel', [ReportController::class, 'download_excel'])->name('report.download_excel');
     
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');

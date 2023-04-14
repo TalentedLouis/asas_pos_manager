@@ -15,7 +15,15 @@
                     <x-button id="F5" type="submit" class="px-6 py-3 bg-blue-500">作成(F5)</x-button>
                     <a id="F12" class="mr-3 inline-flex items-center px-6 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
                                 href="{{ route('report.index') }}">クリア(F12)</a>
-                </div>	
+                </div>
+               <div class="px-1 mb-1 w-2/12 sm:w-2/12 lg:w-2/12 flex items-center">
+                    <span class="mr-5">Filter Type</span>
+                    <input type="radio" id="all" name="filter-type" checked>all</input>
+                    <input class="ml-5" type="radio" id="sub" name="filter-type">sub</input>
+                </div>
+                <div class="px-1 mb-1 w-2/12 sm:w-2/12 lg:w-2/12">
+                    <img class="w-16 h-16 cursor-pointer" id="download-excel" src="/img/download_excel.png" alt="download_excel icon" />
+                </div>
             </div>
             <div class="flex flex-nowrap border-b-2 w-full sm:w-full lg:w-full">
                 <div class="px-1 mb-1 w-3/12 sm:w-3/12 lg:w-3/12">	
@@ -87,7 +95,23 @@
     </x-slot>
 </x-base-layout>
 <script type="text/javascript">
+    var dataExlArr = <?php echo json_encode($data_for_excel); ?>;
+
     function F5_Click(){
         document.getElementById("F5").click();
     }
+    
+    $('#all').on('click', function() {
+        alert('all');
+    });
+
+    $('#sub').on('click', function() {
+        alert('sub');
+    });
+
+    $('#download-excel').on('click', function() {
+        alert('download excel');
+        console.log(dataExlArr);
+        window.location.href = "/report/download_excel";
+    });
 </script>

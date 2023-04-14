@@ -27,6 +27,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\App;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 use function Faker\Provider\pt_BR\check_digit;
 use DateTime;
 
@@ -78,6 +86,10 @@ class ReportController extends Controller
         $shopConfigAction = App::make(ShopConfigActions::class);
         $trans_date = $shopConfigAction->get_trans_date();
         $shops = $this->shopService->getSelect();
+
+        $user_code = Auth()->id();
+        $dataForExl = DB::table('note'.$user_code)->paginate(15);
+
         return view('report.index', [
             'products' => $entities,
             'productSearchType' => $productSearchType,
@@ -87,6 +99,7 @@ class ReportController extends Controller
             'reportTypeId' => $reportTypeId,
             'trans_date' => $trans_date,
             'shops'=> $shops,
+            'data_for_excel' => $dataForExl
         ]);
     }
 
@@ -104,6 +117,11 @@ class ReportController extends Controller
         $shopConfigAction = App::make(ShopConfigActions::class);
         $trans_date = $shopConfigAction->get_trans_date();
         $shops = $this->shopService->getSelect();
+
+        $user_code = Auth()->id();
+        $dataForExl = DB::table('note'.$user_code)->paginate(15);
+
+
         return view('report.index', [
             'products' => $entities,
             'productSearchType' => $productSearchType,
@@ -113,6 +131,7 @@ class ReportController extends Controller
             'reportTypeId' => $reportTypeId,
             'trans_date' => $trans_date,
             'shops'=> $shops,
+            'data_for_excel' => $dataForExl
         ]); 
     }
 
@@ -253,9 +272,6 @@ class ReportController extends Controller
         }
     }
 
-    
-
-    
     public function code_create(): RedirectResponse
     {
         // Create new code
@@ -266,5 +282,90 @@ class ReportController extends Controller
         $jan_code = $code_suffix . $code_sequence;
         $jan_code .= $this->calcCheckDigitJan13($jan_code);
         return redirect()->route('product.create', ['code' => $jan_code]);
+    }
+
+    public function download_excel(Request $request)
+    {
+        try{
+            $objPHPExcel = IOFactory::load(Storage::path("template.xls"));
+        } catch(Exception $ex){
+            return response()->json([
+                'message' => 'Template file does not exist!',
+            ], 400);
+        }
+
+        // $allData;
+        // if($request){
+        //     $prefectures = $request->prefectures;
+        //     $industry = $request->industry;
+        //     $site_url = $request->siteUrl;
+        //     $capital = $request->capital;
+        //     $amount_of_sales = $request->amountOfSales;
+        //     $free_keyword = $request->freeKeyword;
+        //     $establish_date_from = $request->establishDateFrom;
+        //     $establish_date_to = $request->establishDateTo;
+            
+        //     $allData = Company::where(function ($query) use ($prefectures, $industry, $site_url, $free_keyword, $establish_date_from, $establish_date_to) {
+        //         if($prefectures && $prefectures != 0 )
+        //             $query->where('address', 'LIKE', $prefectures.'%');
+        //         if($industry && $industry != 0 )
+        //             $query->where('category_id', 'LIKE', '%'.$industry.'%');
+        //         if($free_keyword)
+        //             $query->orWhere('name', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('furi', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('en_name', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('category_id', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('url', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('contact_url', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('zip', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('pref', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('address', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('tel', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('dainame', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('corporate_number', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('established', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('capital', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('earnings', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('employees', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('category_txt', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('houjin_flg', 'Like', '%'.$free_keyword.'%')
+        //                     ->orWhere('status', 'Like', '%'.$free_keyword.'%');
+        //         if($site_url == 1)
+        //             $query->where('url', '!=', '');
+        //         if($site_url == 2)
+        //             $query->where('url', '');
+        //     });
+        // } else {
+        //     $allData = Company::all();
+        // }
+
+        // $beginRowNum = 2;
+        // foreach ($allData->lazy(1000) as $company) {
+        //     $objPHPExcel->setActiveSheetIndex(0)
+        //     ->setCellValue('A'.$beginRowNum, $company->name)
+        //     ->setCellValue('B'.$beginRowNum, $company->furi)
+        //     ->setCellValue('C'.$beginRowNum, $company->en_name)
+        //     ->setCellValue('D'.$beginRowNum, $company->category_id)
+        //     ->setCellValue('E'.$beginRowNum, $company->url)
+        //     ->setCellValue('F'.$beginRowNum, $company->contact_url)
+        //     ->setCellValue('G'.$beginRowNum, $company->zip)
+        //     ->setCellValue('H'.$beginRowNum, $company->address)
+        //     ->setCellValue('I'.$beginRowNum, $company->tel)
+        //     ->setCellValue('J'.$beginRowNum, $company->dainame)
+        //     ->setCellValue('K'.$beginRowNum, $company->corporate_number)
+        //     ->setCellValue('L'.$beginRowNum, $company->established)
+        //     ->setCellValue('M'.$beginRowNum, $company->capital)
+        //     ->setCellValue('N'.$beginRowNum, $company->earnings)
+        //     ->setCellValue('O'.$beginRowNum, $company->employees)
+        //     ->setCellValue('P'.$beginRowNum, $company->category_txt)
+        //     ->setCellValue('Q'.$beginRowNum, $company->created)
+        //     ->setCellValue('R'.$beginRowNum, $company->modifi);
+        //     $beginRowNum++;
+        // };
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
+        $pathToFile = Storage::path("帳票".date('d-m-Y').".xlsx");
+        $objWriter->save($pathToFile);
+        
+        return response()->download($pathToFile)->deleteFileAfterSend(true);
     }
 }
