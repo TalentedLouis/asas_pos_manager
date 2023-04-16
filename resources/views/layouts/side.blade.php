@@ -90,7 +90,7 @@
                 <a class="down-icon w-4 h-4 mt-1">
             </label>
             <div class="tab-content overflow-hidden">
-                <a class="block p-3" href="{{ route('stock_taking.select') }}">
+                <a class="block p-3" href="{{ route('stock_taking.list') }}">
                     棚卸数登録一覧</a>
                 <a class="block p-3" href="{{ route('stock_taking.index') }}">
                     棚卸数登録</a>
