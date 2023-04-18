@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Stock;
 use App\Repositories\StockRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class StockService
 {
@@ -27,5 +28,23 @@ class StockService
     public function getKariStock(): ?Stock
     {
         return $this->stockRepository->newKariEntity();
+    }
+
+    public function getAllStocks(): LengthAwarePaginator
+    {
+       return $this->stockRepository->newKariEntity();
+    }
+
+    /**
+    * @return LengthAwarePaginator
+    */
+    public function getAll(): LengthAwarePaginator
+    {
+       return $this->stockRepository->all();
+    }
+
+    public function updateThisStock(int $productId, int $stocks): bool
+    {
+        return $this->stockRepository->updateStock($productId, $stocks);
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Enums\TaxableMethodType;
 use App\Enums\TaxRateType;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class StockRepository implements StockRepositoryInterface
 {
@@ -97,5 +99,22 @@ class StockRepository implements StockRepositoryInterface
             $this->save($stock);
         }
         return true;
+    }
+
+    public function updateStock(int $productId, int $stocks): bool
+    {
+        $stock = $this->getOne($productId);
+        $stock->this_stock_quantity = $stocks;
+        $stock->is_stocktaking = true;
+        $this->save($stock);
+        return true;
+    }
+
+    public function all(): LengthAwarePaginator
+    {
+       return DB::table('stocks')
+         ->leftjoin('products','stocks.product_id','=','products.id')
+         ->where('stocks.shop_id',Auth::user()->shop->id)
+         ->paginate(15);
     }
 }

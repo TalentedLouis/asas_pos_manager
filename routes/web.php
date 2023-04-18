@@ -144,5 +144,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::match(['PUT', 'PATCH'], '/stock_taking/{product}', [StockTakingController::class, 'update'])->name('stock_taking.update');
     Route::get('/stock_taking', [StockTakingController::class, 'index'])->name('stock_taking.index');
     Route::get('/stock_taking/select', [StockTakingController::class, 'select'])->name('stock_taking.select');
+    Route::get('/stock_taking/list', [StockTakingController::class, 'show'])->name('stock_taking.list');
+    Route::post('/stock_taking/stocks', [StockTakingController::class, 'stocks']);
 });
 require __DIR__ . '/auth.php';

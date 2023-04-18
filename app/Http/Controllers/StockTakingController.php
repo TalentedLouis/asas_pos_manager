@@ -68,6 +68,14 @@ class StockTakingController extends Controller
         ]);
     }
 
+    public function show(): View
+    {
+       $stocks = $this->stockService->getAll();
+       return view('stock_taking.list', [
+           'stocks' => $stocks,
+       ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -217,5 +225,11 @@ class StockTakingController extends Controller
             'products' => $entities,
             'productSearchType' => $productSearchType,
         ]);
+    }
+
+    public function stocks(Request $request) {
+        $param1 = $request->id;
+        $param2 = $request->stock_quantity;
+        return $this->stockService->updateThisStock($param1, $param2);
     }
 }

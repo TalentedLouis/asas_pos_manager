@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Stock;
 use App\Models\TransactionSlip;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface StockRepositoryInterface
 {
@@ -31,4 +32,11 @@ interface StockRepositoryInterface
     public function getOtherOne(int $productId): ?Stock;
 
     public function changeStock(TransactionSlip $slip, $is_delete): bool;
+
+    public function updateStock(int $productId, int $stocks): bool;
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function all(): LengthAwarePaginator;
 }
