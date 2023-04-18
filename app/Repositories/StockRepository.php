@@ -104,7 +104,7 @@ class StockRepository implements StockRepositoryInterface
     public function updateStock(int $productId, int $stocks): bool
     {
         $stock = $this->getOne($productId);
-        $stock->this_stock_quantity = $stocks;
+        $stock->stocktaking_quantity = $stocks;
         $stock->is_stocktaking = true;
         $this->save($stock);
         return true;

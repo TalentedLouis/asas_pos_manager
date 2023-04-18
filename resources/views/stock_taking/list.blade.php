@@ -20,10 +20,10 @@
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-2/12 sm:w-2/12 lg:w-2/12 text-left">{{ $stock->code }}</td>
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left">{{ $stock->name }}</td>
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $stock->avg_stocking_price }}</td>
-                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $stock->stocktaking_quantity }}</td>
+                    <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $stock->this_stock_quantity }}</td>
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">
                         <input type="hidden" name="product_id" class="id" value={{ $stock->id }}>
-                        <input type="number" name="stock_quantity" class="price" min="0" value={{ isset($my_input) ? $my_input : $stock->this_stock_quantity }} style="max-width: 120px">
+                        <input type="number" name="stock_quantity" class="price" min="0" value={{ isset($my_input) ? $my_input : $stock->stocktaking_quantity }} style="max-width: 120px">
                     </td>
                     <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right child">{{ $stock->is_stocktaking ? '棚卸済' : '' }}</td>
                 </tr>
