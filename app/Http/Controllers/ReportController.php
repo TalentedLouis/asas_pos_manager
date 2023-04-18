@@ -9,6 +9,7 @@ use App\Enums\ReportType;
 use App\Http\Requests\ProductRequest;
 use App\Models\ConfigRegi;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Repositories\StockRepositoryInterface;
 use App\Services\CategoryService;
 use App\Services\ConfigRegiService;
@@ -34,6 +35,10 @@ use Illuminate\Support\Facades\Storage;
 
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
+use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 use function Faker\Provider\pt_BR\check_digit;
 use DateTime;
@@ -294,78 +299,142 @@ class ReportController extends Controller
             ], 400);
         }
 
-        // $allData;
-        // if($request){
-        //     $prefectures = $request->prefectures;
-        //     $industry = $request->industry;
-        //     $site_url = $request->siteUrl;
-        //     $capital = $request->capital;
-        //     $amount_of_sales = $request->amountOfSales;
-        //     $free_keyword = $request->freeKeyword;
-        //     $establish_date_from = $request->establishDateFrom;
-        //     $establish_date_to = $request->establishDateTo;
-            
-        //     $allData = Company::where(function ($query) use ($prefectures, $industry, $site_url, $free_keyword, $establish_date_from, $establish_date_to) {
-        //         if($prefectures && $prefectures != 0 )
-        //             $query->where('address', 'LIKE', $prefectures.'%');
-        //         if($industry && $industry != 0 )
-        //             $query->where('category_id', 'LIKE', '%'.$industry.'%');
-        //         if($free_keyword)
-        //             $query->orWhere('name', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('furi', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('en_name', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('category_id', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('url', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('contact_url', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('zip', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('pref', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('address', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('tel', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('dainame', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('corporate_number', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('established', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('capital', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('earnings', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('employees', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('category_txt', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('houjin_flg', 'Like', '%'.$free_keyword.'%')
-        //                     ->orWhere('status', 'Like', '%'.$free_keyword.'%');
-        //         if($site_url == 1)
-        //             $query->where('url', '!=', '');
-        //         if($site_url == 2)
-        //             $query->where('url', '');
-        //     });
-        // } else {
-        //     $allData = Company::all();
-        // }
+        $category_filter_type = $request->category_filter_type;
+        $arr1 = $request->checked_status;
+        $checked_status = [];
 
-        // $beginRowNum = 2;
-        // foreach ($allData->lazy(1000) as $company) {
-        //     $objPHPExcel->setActiveSheetIndex(0)
-        //     ->setCellValue('A'.$beginRowNum, $company->name)
-        //     ->setCellValue('B'.$beginRowNum, $company->furi)
-        //     ->setCellValue('C'.$beginRowNum, $company->en_name)
-        //     ->setCellValue('D'.$beginRowNum, $company->category_id)
-        //     ->setCellValue('E'.$beginRowNum, $company->url)
-        //     ->setCellValue('F'.$beginRowNum, $company->contact_url)
-        //     ->setCellValue('G'.$beginRowNum, $company->zip)
-        //     ->setCellValue('H'.$beginRowNum, $company->address)
-        //     ->setCellValue('I'.$beginRowNum, $company->tel)
-        //     ->setCellValue('J'.$beginRowNum, $company->dainame)
-        //     ->setCellValue('K'.$beginRowNum, $company->corporate_number)
-        //     ->setCellValue('L'.$beginRowNum, $company->established)
-        //     ->setCellValue('M'.$beginRowNum, $company->capital)
-        //     ->setCellValue('N'.$beginRowNum, $company->earnings)
-        //     ->setCellValue('O'.$beginRowNum, $company->employees)
-        //     ->setCellValue('P'.$beginRowNum, $company->category_txt)
-        //     ->setCellValue('Q'.$beginRowNum, $company->created)
-        //     ->setCellValue('R'.$beginRowNum, $company->modifi);
-        //     $beginRowNum++;
-        // };
+        if($category_filter_type == 'true'){
+            $checked_status = explode(",", $arr1);
+        }
+
+        $user_code = Auth()->id();
+        
+        $data;
+        if($category_filter_type == 'true'){
+            $query = DB::table('note'.$user_code);
+            foreach ($checked_status as $item) {
+                $query->orWhere('category_code', $item);
+            }
+            $data = $query->paginate(15);
+        
+        } else {
+            $data = DB::table('note'.$user_code)->paginate(15);
+        }
+        
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+        $shop_id = $request->shop_id;
+        $shop_name = '';
+        
+        if($shop_id) {
+            $data = Shop::where('id', $shop_id)->first();
+            $shop_name = $data->name;
+        }
+
+        $title = "ｸﾞﾙｰﾌﾟ別売上仕入金額表     [期間]".$from_date."〜".$to_date."     [店舗] 22:AS.AS".$shop_name;
+
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', $title);
+        $sum_sale_quantity=0; 
+        $sum_sale_money = 0; 
+        $sum_exit_stock_quantity = 0;
+        $sum_exit_stock_money = 0;
+        $sum_purchase_quantity = 0;
+        $sum_purchase_money = 0;
+        $sum_entry_stock_quantity = 0;
+        $sum_entry_stock_money = 0;
+
+        $beginRowNum = 3;
+        foreach ($data as $item) {
+            $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A'.$beginRowNum, $item->category_code)
+            ->setCellValue('B'.$beginRowNum, $item->category_name)
+            ->setCellValue('C'.$beginRowNum, $item->sale_quantity)
+            ->setCellValue('D'.$beginRowNum, $item->sale_money)
+            ->setCellValue('E'.$beginRowNum, 0)
+            ->setCellValue('F'.$beginRowNum, 0)
+            ->setCellValue('G'.$beginRowNum, 0)
+            ->setCellValue('H'.$beginRowNum, $item->exit_stock_quantity)
+            ->setCellValue('I'.$beginRowNum, $item->exit_stock_money)
+            ->setCellValue('J'.$beginRowNum, $item->purchase_quantity)
+            ->setCellValue('K'.$beginRowNum, $item->purchase_money)
+            ->setCellValue('L'.$beginRowNum, $item->entry_stock_quantity)
+            ->setCellValue('M'.$beginRowNum, $item->entry_stock_money);
+            $beginRowNum++;
+
+            $sum_sale_quantity += $item->sale_quantity;
+            $sum_sale_money += $item->sale_money;
+            $sum_exit_stock_quantity += $item->exit_stock_quantity;
+            $sum_exit_stock_money += $item->exit_stock_money;
+            $sum_purchase_quantity += $item->purchase_quantity;
+            $sum_purchase_money += $item->purchase_money;
+            $sum_entry_stock_quantity += $item->entry_stock_quantity;
+            $sum_entry_stock_money += $item->entry_stock_money;
+        };
+        
+        $objPHPExcel->setActiveSheetIndex(0)
+        ->setCellValue('A'.$beginRowNum, '')
+        ->setCellValue('B'.$beginRowNum, '総合計カゴ入')
+        ->setCellValue('C'.$beginRowNum, $sum_sale_quantity)
+        ->setCellValue('D'.$beginRowNum, $sum_sale_money)
+        ->setCellValue('E'.$beginRowNum, 0)
+        ->setCellValue('F'.$beginRowNum, 0)
+        ->setCellValue('G'.$beginRowNum, '')
+        ->setCellValue('H'.$beginRowNum, $sum_exit_stock_quantity)
+        ->setCellValue('I'.$beginRowNum, $sum_exit_stock_money)
+        ->setCellValue('J'.$beginRowNum, $sum_purchase_quantity)
+        ->setCellValue('K'.$beginRowNum, $sum_purchase_money)
+        ->setCellValue('L'.$beginRowNum, $sum_entry_stock_quantity)
+        ->setCellValue('M'.$beginRowNum, $sum_entry_stock_money);
+        
+        $styleArray = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'color' => ['rgb' => 'fca5a5'],
+            ],
+        ];
+        $objPHPExcel->getActiveSheet()->getStyle('B'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('C'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('D'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('E'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('F'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('H'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('I'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('J'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('K'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('L'.$beginRowNum)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('M'.$beginRowNum)->applyFromArray($styleArray);
+
         $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
         $pathToFile = Storage::path("帳票".date('d-m-Y').".xlsx");
         $objWriter->save($pathToFile);
         
         return response()->download($pathToFile)->deleteFileAfterSend(true);
+    }
+    
+    /**
+     * Generate PDF file.
+    */
+    public function download_pdf(Request $request)
+    {
+        $user_code = Auth()->id();
+        $data_for_exl = DB::table('note'.$user_code)->paginate(15);
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+        $shop_id = $request->shop_id;
+        $shop_name = '';
+        
+        if($shop_id) {
+            $data = Shop::where('id', $shop_id)->first();
+            $shop_name = $data->name;
+        }
+            
+        $data = [
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'shop_name' => $shop_name,
+            'data_for_exl' => $data_for_exl
+        ];
+        $pdf = PDF::loadView('pdf.tempPDF', $data);
+        return $pdf->download('tempPDF.pdf');
     }
 }

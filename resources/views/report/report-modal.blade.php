@@ -8,11 +8,13 @@
                     <div class="flex flex-wrap border-b-2 w-12/12 sm:w-12/12 lg:w-12/12">
                         <div class="px-3 mb-6 w-9/12 sm:w-9/12 lg:w-9/12">
                             <div class="px-3 mb-6 w-full sm:w-3/3 lg:w-3/3">							
-                                <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索"/>
+                                <!-- <x-label for="product_search_type" class="w-2/12 sm:w-2/12 lg:w-2/12" value="商品名検索"/>
                                 <x-input id="keyword" type="text" name="keyword" class="w-2/12 sm:w-2/12 lg:w-2/12" :value="old('keyword')" />
                                 <x-button id="F5" type="button" class="px-6 py-3 bg-blue-500" onclick="getProducts();">検索(F5)</x-button>
-                                <x-button id="F12" type="button" class="px-6 py-3 bg-blue-500" onclick="keyNameClear();">クリア(F12)</x-button>
-                                <x-button type="button" class="px-6 py-3 bg-red-300"  onclick="closeModal();">キャンセル</x-button>
+                                <x-button id="F12" type="button" class="px-6 py-3 bg-blue-500" onclick="keyNameClear();">クリア(F12)</x-button> -->
+                                <x-button type="button" class="px-6 py-3 bg-blue-300"  onclick="clearAll();">クリア</x-button>
+                                <x-button type="button" class="px-6 py-3 bg-blue-300"  onclick="selectAll();">全部選択</x-button>
+                                <x-button type="button" class="px-6 py-3 bg-red-300"  onclick="closeModal();">指定完了</x-button>
                             </div>
                         </div>
                     </div>
@@ -20,23 +22,19 @@
                     <table class="table-auto w-full mb-2">
                         <thead>
                         <tr class="border">
-                            <th></th>
-                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">商品コード</th>
-                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left">商品名</th>
-                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/48 sm:w-2/48 lg:w-2/48 text-left">カテゴリー</th>
-                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/48 sm:w-2/48 lg:w-2/48 text-left">ジャンル</th>
+                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">コード</th>
+                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left"></th>
+                            <th class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-center"></th>
                         </tr>
                         </thead>
                         <tbody id="products-table">
-                        @foreach($products as $product)
+                        @foreach($data as $item)
                             <tr class="border bg-white odd:bg-gray-100">
+                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $item->category_code }}</td>
+                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left">{{ $item->category_name }}</td>
                                 <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-center">
-                                    <x-button id="target" type="button" class="px-6 py-3 bg-blue-500" onclick="handleProductClick({{$product}});">選択</x-button>
+                                    <input type="checkbox" class="sub" id="sub-checkbox" onclick="getValue(this, {{$item->category_code}})" />
                                 </td>
-                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/12 sm:w-1/12 lg:w-1/12 text-right">{{ $product->code }}</td>
-                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-3/12 sm:w-3/12 lg:w-3/12 text-left">{{ $product->name }}</td>
-                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/48 sm:w-1/48 lg:w-2/48 text-left">{{ $product->category->name }}</td>
-                                <td class="py-2 px-1 sm:px-2 lg:px-4 w-1/48 sm:w-1/48 lg:w-2/48 text-left">{{ $product->genre->name }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -96,4 +94,5 @@
         $('#reportModal').addClass('invisible');
         // getProducts();
     }
+
 </script>
