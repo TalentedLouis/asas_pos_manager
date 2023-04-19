@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -93,7 +94,11 @@ class ReportController extends Controller
         $shops = $this->shopService->getSelect();
 
         $user_code = Auth()->id();
-        $dataForExl = DB::table('note'.$user_code)->paginate(15);
+
+        $dataForExl = [];
+        if (Schema::hasTable('note'.$user_code)) {
+            $dataForExl = DB::table('note'.$user_code)->paginate(15);
+        }
 
         return view('report.index', [
             'products' => $entities,
@@ -124,7 +129,10 @@ class ReportController extends Controller
         $shops = $this->shopService->getSelect();
 
         $user_code = Auth()->id();
-        $dataForExl = DB::table('note'.$user_code)->paginate(15);
+        $dataForExl = [];
+        if (Schema::hasTable('note'.$user_code)) {
+            $dataForExl = DB::table('note'.$user_code)->paginate(15);
+        }
 
 
         return view('report.index', [
@@ -309,16 +317,18 @@ class ReportController extends Controller
 
         $user_code = Auth()->id();
         
-        $data;
-        if($category_filter_type == 'true'){
-            $query = DB::table('note'.$user_code);
-            foreach ($checked_status as $item) {
-                $query->orWhere('category_code', $item);
+        $data = [];
+        if (Schema::hasTable('note'.$user_code)) {
+            if($category_filter_type == 'true'){
+                    $query = DB::table('note'.$user_code);
+                    foreach ($checked_status as $item) {
+                        $query->orWhere('category_code', $item);
+                    }
+                    $data = $query->paginate(15);
+            
+            } else {
+                $data = DB::table('note'.$user_code)->paginate(15);
             }
-            $data = $query->paginate(15);
-        
-        } else {
-            $data = DB::table('note'.$user_code)->paginate(15);
         }
         
         $from_date = $request->from_date;
@@ -327,8 +337,8 @@ class ReportController extends Controller
         $shop_name = '';
         
         if($shop_id) {
-            $data = Shop::where('id', $shop_id)->first();
-            $shop_name = $data->name;
+            $shop = Shop::where('id', $shop_id)->first();
+            $shop_name = $shop->name;
         }
 
         $title = "ｸﾞﾙｰﾌﾟ別売上仕入金額表     [期間]".$from_date."〜".$to_date."     [店舗] 22:AS.AS".$shop_name;
@@ -417,7 +427,10 @@ class ReportController extends Controller
     public function download_pdf(Request $request)
     {
         $user_code = Auth()->id();
-        $data_for_exl = DB::table('note'.$user_code)->paginate(15);
+        $data_for_exl = [];
+        if (Schema::hasTable('note'.$user_code)) {
+            $data_for_exl = DB::table('note'.$user_code)->paginate(15);
+        }
         $from_date = $request->from_date;
         $to_date = $request->to_date;
         $shop_id = $request->shop_id;
