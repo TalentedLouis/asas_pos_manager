@@ -17,7 +17,6 @@ use App\Services\SupplierTargetService;
 use App\Services\EntryExitTargetService;
 
 use App\Models\Product;
-use App\Services\ProductService;
 use App\Services\StockService;
 use App\Services\TaxService;
 use Illuminate\Support\Facades\App;
